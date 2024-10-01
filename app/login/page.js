@@ -52,10 +52,10 @@ export default function Login() {
   }
 
     return (
-      <div className="login-container flex items-center justify-center min-h-screen">
+      <div className="login-container flex items-center justify-center bg-green-100  relative min-h-screen">
         <div className="login-form-wrapper flex w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="login-image w-1/2 hidden md:block">
-            <img src="/path/to/your/image.jpg" alt="Login" className="object-cover h-full w-full" />
+            <img src="/login.png" alt="Login" className="object-cover h-full w-full" />
           </div>
           <div className="login-form-container w-full md:w-1/2 p-8 flex flex-col justify-center">
             <h1 className="login-title text-black-500 text-2xl font-bold mb-6">Login</h1>
@@ -91,12 +91,12 @@ export default function Login() {
                   required
                 />
               </div>
-              <div className="flex justify-between mb-1">
+              <div className="flex justify-center space-x-2 mb-4">
                 <Button type="submit" className="login-submit-button bg-green-500 text-white hover:bg-green-600 transition-colors">Login</Button>
                 <Button type="button" className="login-cancel-button" onClick={() => router.push('/some-other-page')}>Cancel</Button>
               </div>
               <p className="text-center">
-              Already have an account?{' '}
+              Already haven't an account?{' '}
               <span className="text-blue-500 cursor-pointer" onClick={() => router.push('/register')}>Register</span>
             </p>
             </form>
