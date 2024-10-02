@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { getEquipment, createBooking } from '../../../lib/api'
+// import { getEquipment, createBooking } from '../../../lib/api'
 
 export default function EquipmentDetail({ params }) {
   const [equipment, setEquipment] = useState(null)

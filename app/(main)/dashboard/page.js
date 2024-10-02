@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 // import { getUserBookings } from '../../lib/api'
-import EquipmentCard from '../../components/EquipmentCard'
 
 export default function Dashboard() {
   const [bookings, setBookings] = useState([])
@@ -24,7 +23,10 @@ export default function Dashboard() {
       <h1>Dashboard</h1>
       <h2>Your Bookings</h2>
       {bookings.map((booking) => (
-        <EquipmentCard key={booking._id} equipment={booking.equipmentId} />
+        <div key={booking._id}>
+          <h3>Equipment: {booking.equipmentId.name}</h3>
+          <p>Type: {booking.equipmentId.type}</p>
+        </div>
       ))}
     </div>
   )

@@ -2,9 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+
+
+
+
 import { Input } from '@nextui-org/react'; // Ensure @nextui-org/react is installed
 import Image from 'next/image'; // Import Image component from Next.js
 import { toast } from 'sonner';
+
 export default function Register() {
   const [formData, setFormData] = useState({
     fullName: '',
@@ -14,7 +20,7 @@ export default function Register() {
     password: '',
     confirmPassword: '',
   });
-  const [error, setError] = useState(null);
+  // Removed error state
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -23,11 +29,9 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
 
     // Check if passwords match
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
       toast.error('Passwords do not match');
       return;
     }
@@ -54,11 +58,9 @@ export default function Register() {
         router.push('/login');
       } else {
         const errorData = await response.json();
-        setError(errorData.error);
         toast.error(errorData.error || 'Registration failed. Please try again.');
       }
     } catch (error) {
-      setError('Registration failed. Please try again.');
       console.error('Error during registration:', error);
       toast.error('Registration failed. Please try again.');
     }
@@ -80,20 +82,21 @@ export default function Register() {
       {/* Left Side - Image */}
       <div className="flex flex-col w-2/3 justify-center items-center bg-green-100 rounded-r-[20%] relative">
         <Image
-          src="/backReg.png" 
-          width={700} height={700} // Ensure this path is correct in your public directory
+          src="/backReg.png"
+          width={700}
+          height={700}
           alt="Registration"
-          //layout="fill" // Set to 'intrinsic' or 'responsive' to avoid covering the entire area
           objectFit="cover"
-          className="rounded-r-[20%]" // Ensure the image respects the rounded corners
+          className="rounded-r-[20%]"
         />
       </div>
 
       {/* Right Side - Form */}
       <div className="flex w-1/2 justify-center items-center">
-        <div className="w-full p-9 bg-white rounded-lg shadow-lg text-center">
-          <h1 className="text-2xl font-bold text-center mb-6">Create Your Account</h1>
-          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+  <div className="w-[calc(100%_-_100px)] p-9 bg-white rounded-lg shadow-lg border border-gray-200 text-center">
+    <h1 className="text-2xl font-bold text-center mb-6">Create Your Account</h1>
+  
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Full Name and Email Input */}
             <div className="flex gap-6">
@@ -107,8 +110,8 @@ export default function Register() {
                 placeholder="John Doe"
                 className="flex-1"
                 required
-                labelClassName="text-lg" // Bold label
-                placeholderClassName="text-sm" // Smaller placeholder
+                labelClassName="text-lg"
+                placeholderClassName="text-sm"
               />
               <Input
                 type="email"
@@ -120,8 +123,8 @@ export default function Register() {
                 placeholder="johndoe@example.com"
                 className="flex-1"
                 required
-                labelClassName="text-lg" // Bold label
-                placeholderClassName="text-sm" // Smaller placeholder
+                labelClassName="text-lg"
+                placeholderClassName="text-sm"
               />
             </div>
 
@@ -134,11 +137,11 @@ export default function Register() {
                 onChange={handleChange}
                 variant="bordered"
                 label="Contact Number"
-                placeholder="+1 234 567 890"
+                placeholder="+91 xxxxxxxxxx"
                 className="flex-1"
                 required
-                labelClassName="text-lg" // Bold label
-                placeholderClassName="text-sm" // Smaller placeholder
+                labelClassName="text-lg"
+                placeholderClassName="text-sm"
               />
               <Input
                 type="text"
@@ -150,8 +153,8 @@ export default function Register() {
                 placeholder="123 Main St"
                 className="flex-1"
                 required
-                labelClassName="text-lg" // Bold label
-                placeholderClassName="text-sm" // Smaller placeholder
+                labelClassName="text-lg"
+                placeholderClassName="text-sm"
               />
             </div>
 
@@ -167,8 +170,8 @@ export default function Register() {
                 placeholder="Strong password"
                 className="flex-1"
                 required
-                labelClassName="text-lg" // Bold label
-                placeholderClassName="text-sm" // Smaller placeholder
+                labelClassName="text-lg"
+                placeholderClassName="text-sm"
               />
               <Input
                 type="password"
@@ -180,8 +183,8 @@ export default function Register() {
                 placeholder="Re-enter password"
                 className="flex-1"
                 required
-                labelClassName="text-lg" // Bold label
-                placeholderClassName="text-sm" // Smaller placeholder
+                labelClassName="text-lg"
+                placeholderClassName="text-sm"
               />
             </div>
 
@@ -210,14 +213,13 @@ export default function Register() {
                   href="/login"
                   className="text-blue-500 font-semibold hover:underline"
                 >
-                  Login
+                  Sign Up
                 </a>
               </p>
             </div>
           </form>
         </div>
       </div>
-      
     </div>
   );
 }
