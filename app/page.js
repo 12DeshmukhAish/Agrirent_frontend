@@ -1,94 +1,217 @@
 import Link from 'next/link';
 // import Head from 'next/head';
-import Image from 'next/image';
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Button} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, Image} from "@nextui-org/react";
 // import {AcmeLogo} from "./AcmeLogo.jsx";
 
 export default function Home() {
   return (
     <>
-      <Navbar>
+
+  <>
+    <Navbar className="bg-green-100 p-2">
+      <div className="container mx-auto flex justify-between items-center ">
+        {/* AgriRent title on the left */}
         <NavbarBrand>
-          {/* <AcmeLogo /> */}
-          <p className="font-bold text-inherit">AgriRent</p>
+          <p className="font-bold text-black text-xl">AgriRent</p>
         </NavbarBrand>
-        <NavbarContent className="hidden sm:flex gap-4" justify="center">
+
+        {/* Center items (About, Contact) - hidden on small screens */}
+        <NavbarContent className="hidden sm:flex gap-10" justify="center">
           <NavbarItem>
-            <Link href="#">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem isActive>
-            <Link href="#" aria-current="page">
-              Customers
+            <Link href="#" aria-current="page" className="text-black">
+              About
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link href="#">
-              Integrations
+            <Link href="/contact" aria-current="page" className="text-black">
+              Contact
             </Link>
           </NavbarItem>
         </NavbarContent>
+
+        {/* Login and Sign Up buttons on the right */}
         <NavbarContent justify="end">
-          <NavbarItem className="hidden lg:flex" color="primary">
-            <Link href="#">Login</Link>
+          <NavbarItem className="hidden lg:flex">
+            <Link href="/login" className="text-black">
+              Login
+            </Link>
           </NavbarItem>
           <NavbarItem>
-            <Button as={Link} href="#" color="primary" variant="flat">
+            <Link href="register" className="text-black">
               Sign Up
-            </Button>
+            </Link>
           </NavbarItem>
         </NavbarContent>
-      </Navbar>
+      </div>
+    </Navbar>
 
-      <main className="container mx-auto p-6">
-        <section className="text-center my-12">
-          <h1 className="text-5xl font-bold text-blue-500 mb-4">Welcome to Agrirent</h1>
-          <p className="text-gray-600 text-lg mb-8"></p>
-          <div className="flex justify-between items-center space-x-8">
-            <div className="w-1/2">
-              <Image src="/5155462_2689047.svg" width={600} height={600} alt="Attendance System Illustration" className="w-full h-auto" />
-            </div>
-            <div className="w-1/2 text-left">
-              <p className="text-gray-600 text-lg mb-4">
-             
-              </p>
-              <p className="text-gray-600 text-lg mb-4">
-               
-              </p>
-              <Link href="/login" legacyBehavior>
-                <a>
-                  <button className="custom-button">
-                    <div className="svg-wrapper-1">
-                      <div className="svg-wrapper">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          width="24"
-                          height="24"
-                        >
-                          <path fill="none" d="M0 0h24v24H0z"></path>
-                          <path
-                            fill="currentColor"
-                            d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
-                          ></path>
-                        </svg>
-                      </div>
-                    </div>
-                    <span>Start </span>
-                  </button>
-                </a>
-              </Link>
-            </div>
-          </div>
-        </section>
-      </main>
+    <main className="relative w-full h-screen bg-no-repeat bg-cover bg-center" style={{ backgroundImage: "url('/home.png')" }}>
+  <section className="text-center">
+    {/* Title over the image */}
+    <h1 className="absolute inset-0 flex items-center justify-center text-7xl font-bold text-white">
+      Welcome to Agrirent
+    </h1>
+  </section>
+</main>
 
-      <footer className="bg-white py-6 mt-12">
-        <div className="container mx-auto text-center px-4">
-          <p className="text-gray-600">&copy; 2024 Agrirent. All rights reserved.</p>
-        </div>
-      </footer>
-    </>
+  </>
+
+  <div className="bg-green-100 min-h-screen">
+  {/* Cards Section */}
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-8">
+    <Card className="py-4">
+      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+        <h4 className="font-bold text-large">Tractor</h4>
+      </CardHeader>
+      <CardBody className="overflow-visible py-2">
+        <Image
+          alt="Card background"
+          className="object-cover rounded-xl"
+          src="/tractor.png"
+          width={270}
+        />
+      </CardBody>
+    </Card>
+
+    <Card className="py-4">
+      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+        <h4 className="font-bold text-large">Harvestor</h4>
+      </CardHeader>
+      <CardBody className="overflow-visible py-2">
+        <Image
+          alt="Card background"
+          className="object-cover rounded-xl"
+          src="/harvestor.png"
+          width={270}
+        />
+      </CardBody>
+    </Card>
+
+    <Card className="py-4">
+      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+        <h4 className="font-bold text-large">Cultivator</h4>
+      </CardHeader>
+      <CardBody className="overflow-visible py-2">
+        <Image
+          alt="Card background"
+          className="object-cover rounded-xl"
+          src="/cultivator.png"
+          width={270}
+        />
+      </CardBody>
+    </Card>
+
+    <Card className="py-4">
+      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+        <h4 className="font-bold text-large">Rotavator</h4>
+      </CardHeader>
+      <CardBody className="overflow-visible py-2">
+        <Image
+          alt="Card background"
+          className="object-cover rounded-xl"
+          src="/rotavator.png"
+          width={270}
+        />
+      </CardBody>
+    </Card>
+
+    <Card className="py-4">
+      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+        <h4 className="font-bold text-large">Ripper</h4>
+      </CardHeader>
+      <CardBody className="overflow-visible py-2">
+        <Image
+          alt="Card background"
+          className="object-cover rounded-xl"
+          src="/ripper.png"
+          width={270}
+        />
+      </CardBody>
+    </Card>
+
+    <Card className="py-4">
+      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+        <h4 className="font-bold text-large">Threshor machine</h4>
+      </CardHeader>
+      <CardBody className="overflow-visible py-2">
+        <Image
+          alt="Card background"
+          className="object-cover rounded-xl"
+          src="/threshor.png"
+          width={270}
+        />
+      </CardBody>
+    </Card>
+
+    <Card className="py-4">
+      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+        <h4 className="font-bold text-large">Corn Planter</h4>
+      </CardHeader>
+      <CardBody className="overflow-visible py-2">
+        <Image
+          alt="Card background"
+          className="object-cover rounded-xl"
+          src="/corn.png"
+          width={270}
+        />
+      </CardBody>
+    </Card>
+
+    <Card className="py-4">
+      <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+        <h4 className="font-bold text-large">Disc Plow</h4>
+      </CardHeader>
+      <CardBody className="overflow-visible py-2">
+        <Image
+          alt="Card background"
+          className="object-cover rounded-xl"
+          src="/disc.png"
+          width={270}
+        />
+      </CardBody>
+    </Card>
+  </div>
+
+
+
+  <footer className="py-6 mt-12" style={{ backgroundColor: "#f58d42" }}>
+  <div className="container mx-auto px-4 flex justify-between items-center">
+    {/* Left side: Copyright */}
+    <p className="text-gray-600">&copy; 2024 Agrirent. All rights reserved.</p>
+
+    {/* Right side: Social icons and contact info */}
+    <div className="text-right">
+      <div className="flex items-center justify-end space-x-4">
+        {/* Social Media Icons */}
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+          <img src="/insta.png" alt="Instagram" className="w-6 h-6" />
+        </a>
+        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+          <img src="/twitter.png" alt="Twitter" className="w-6 h-6" />
+        </a>
+      </div>
+      {/* Contact Info */}
+      <div className="mt-2">
+        <p className="text-gray-600">Contact: 9579112654</p>
+        <p className="text-gray-600">Email: deshmukhaishwarya484@gmail.com</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+</div>
+</>
   );
 }
+
+
