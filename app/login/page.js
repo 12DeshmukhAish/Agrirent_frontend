@@ -5,8 +5,17 @@ import { useRouter } from 'next/navigation'
 // import { loginUser } from ''
 import { toast, Toaster } from 'sonner' // Import Toaster
 import { Button, Input } from '@nextui-org/react'
+import React from "react";
+import {EyeFilledIcon} from "./EyeFilledIcon";
+import {EyeSlashFilledIcon} from "./EyeSlashFilledIcon";
+
+
 
 export default function Login() {
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -42,51 +51,66 @@ export default function Login() {
     }
   }
 
-  return (
-    <div className="login-container ">
-      <div className="login-image">
-        <img src="/path/to/your/image.jpg" alt="Login" />
-      </div>
-      <div className="login-form-container">
-        <h1 className="login-title text-red-500">Login</h1>
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form__group field">
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Email"
-              required
-              className="form__field"
-            />
-            <label htmlFor="email" className="form__label">Email</label>
+    return (
+      <div className="login-container flex items-center justify-center bg-green-100  relative min-h-screen">
+        <div className="login-form-wrapper flex w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
+          <div className="login-image w-1/2 hidden md:block">
+            <img src="/login.png" alt="Login" className="object-cover h-full w-full" />
           </div>
-          <div className="form__group field">
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              required
-              className="form__field"
-            />
-            <label htmlFor="password" className="form__label">Password</label>
+          <div className="login-form-container w-full md:w-1/2 p-8 flex flex-col justify-center">
+            <h1 className="login-title text-black-500 text-2xl font-bold mb-6">Login</h1>
+            <form onSubmit={handleSubmit} className="login-form">
+              <div className="form__group field mb-6">
+                <Input
+                  label="Email"
+                  variant="bordered"
+                  placeholder="Enter your email"
+                  name="email"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form__group field mb-6">
+                <Input
+                  label="Password"
+                  variant="bordered"
+                  placeholder="Enter your password"
+                  endContent={
+                    <button className="focus:outline-none" type="button" onClick={toggleVisibility} aria-label="toggle password visibility">
+                      {isVisible ? (
+                        <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                      ) : (
+                        <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                      )}
+                    </button>
+                  }
+                  type={isVisible ? "text" : "password"}
+                  className="w-full"
+                  name="password"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="flex justify-center space-x-2 mb-4">
+                <Button type="submit" className="login-submit-button bg-green-500 text-white hover:bg-green-600 transition-colors">Login</Button>
+                <Button type="button" className="login-cancel-button" onClick={() => router.push('/some-other-page')}>Cancel</Button>
+              </div>
+              <p className="text-center">
+              Already haven't an account?{' '}
+              <span className="text-blue-500 cursor-pointer" onClick={() => router.push('/register')}>Register</span>
+            </p>
+            </form>
           </div>
-          <Button type="submit" className="login-submit-button">
-            Login
-          </Button>
-        </form>
+        </div>
+        <Toaster position="top-right" reverseOrder={false} />
       </div>
-      
-      {/* Add the Toaster component to display toast notifications */}
-      <Toaster position="top-right" reverseOrder={false} />
-    </div>
-  )
-}
+    );
+  }
+
+
+
+
+
 // "use client";
 // import React, { useState, useEffect } from 'react';
 // import Link from 'next/link';

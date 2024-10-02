@@ -2,9 +2,14 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { toast, Toaster } from 'react-hot-toast';
-import { Input } from '@nextui-org/react';
-import Image from 'next/image';
+
+
+
+
+
+import { Input } from '@nextui-org/react'; // Ensure @nextui-org/react is installed
+import Image from 'next/image'; // Import Image component from Next.js
+import { toast } from 'sonner';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -215,9 +220,6 @@ export default function Register() {
           </form>
         </div>
       </div>
-
-      {/* Toaster for Notifications */}
-      <Toaster position="top-right" reverseOrder={false} />
     </div>
   );
 }
