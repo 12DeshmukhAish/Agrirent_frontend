@@ -80,7 +80,7 @@ export default function Register() {
   return (
     <div className="flex h-screen">
       {/* Left Side - Image */}
-      <div className="flex flex-col w-2/3 justify-center items-center bg-green-100 rounded-r-[20%] relative">
+      <div className="flex flex-col w-2/3 justify-center items-center bg-green-800 rounded-r-[20%] relative">
         <Image
           src="/backReg.png"
           width={700}
@@ -92,8 +92,8 @@ export default function Register() {
       </div>
 
       {/* Right Side - Form */}
-      <div className="flex w-1/2 justify-center items-center">
-  <div className="w-[calc(100%_-_100px)] p-9 bg-white rounded-lg shadow-lg border border-gray-200 text-center">
+      <div className="flex w-1/2 justify-center items-center ">
+  <div className="w-[calc(100%_-_100px)] p-9 bg-white rounded-lg shadow-lg border border-black-200 text-center">
     <h1 className="text-2xl font-bold text-center mb-6">Create Your Account</h1>
   
 
