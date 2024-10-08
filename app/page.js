@@ -95,7 +95,7 @@ export default function Home() {
           {/* Navbar links on the far right */}
           <NavbarContent justify="end" className="flex items-center space-x-3">
             <NavbarItem className="font-bold">
-              <Link href="/about-us" passHref>
+              <Link href="/about" passHref>
                 About Us
               </Link>
             </NavbarItem>
