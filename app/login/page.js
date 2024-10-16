@@ -2,14 +2,14 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-// import { loginUser } from ''
+import { loginUser } from '@/lib/api'
 import { toast, Toaster } from 'sonner' // Import Toaster
 import { Button, Input } from '@nextui-org/react'
 import React from "react";
 import {EyeFilledIcon} from "./EyeFilledIcon";
 import {EyeSlashFilledIcon} from "./EyeSlashFilledIcon";
-
-
+import { isAuthenticated } from '@/lib/api'
+import { useEffect } from 'react'
 
 export default function Login() {
   const [isVisible, setIsVisible] = React.useState(false);
@@ -22,17 +22,22 @@ export default function Login() {
   })
   const router = useRouter()
 
+  
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.push('/dashboard')
+    }
+  }, [router])
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const { token } = await loginUser(formData)
-      localStorage.setItem('token', token)
+      const data = await loginUser(formData)
       
-      // Display success toast message
+      // Token is automatically stored in localStorage by loginUser function
+      
       toast.success('Login successful!')
 
       // Clear form after submission
@@ -45,12 +50,9 @@ export default function Login() {
       router.push('/dashboard')
     } catch (error) {
       console.error('Login failed:', error)
-
-      // Display error toast message
-      toast.error('Login failed. Please try again.')
+      toast.error(error.message || 'Login failed. Please try again.')
     }
   }
-
     return (
       <div className="login-container flex items-center justify-center bg-green-100  relative min-h-screen">
         <div className="login-form-wrapper flex w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">

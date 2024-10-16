@@ -2,14 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
-
-
-
-
 import { Input } from '@nextui-org/react'; // Ensure @nextui-org/react is installed
 import Image from 'next/image'; // Import Image component from Next.js
 import { toast } from 'sonner';
+import { registerUser } from '@/lib/api';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -37,15 +33,8 @@ export default function Register() {
     }
 
     try {
-      const response = await fetch('/api/users/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
+      const response = await registerUser(formData)
+      if (response) {
         toast.success('Registration successful!');
         setFormData({
           fullName: '',
@@ -95,9 +84,7 @@ export default function Register() {
       <div className="flex w-1/2 justify-center items-center ">
   <div className="w-[calc(100%_-_100px)] p-9 bg-white rounded-lg shadow-lg border border-black-200 text-center">
     <h1 className="text-2xl font-bold text-center mb-6">Create Your Account</h1>
-  
-
-          <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
             {/* Full Name and Email Input */}
             <div className="flex gap-6">
               <Input

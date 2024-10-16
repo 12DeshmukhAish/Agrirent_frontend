@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import { Input } from "@nextui-org/react";
-// import { getUserBookings } from '../../lib/api'
+import { getUserBookings } from '../../lib/api'
 
 export default function Bookings() {
   const [bookings, setBookings] = useState([])

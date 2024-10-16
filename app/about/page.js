@@ -101,7 +101,6 @@ const About = () => {
       {/* Footer Section */}
       <footer className="py-8 bg-orange-200 text-orange-400">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-          {/* Footer Left: Copyright Information */}
           <div className="text-center md:text-left text-black">
             <p className="text-sm">&copy; 2024 AgriRent. All rights reserved.</p>
             <p className="text-sm mt-2">Contact: 9579112654</p>
