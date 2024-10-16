@@ -8,6 +8,7 @@ import { DateRangePicker } from "@nextui-org/react";
 import { parseDate } from "@internationalized/date";
 import { toast } from 'sonner';
 import Image from 'next/image';
+import { addEquipment } from '@/lib/api';
 
 export default function AddEquipment() {
   const [formData, setFormData] = useState({
@@ -43,7 +44,18 @@ export default function AddEquipment() {
         throw new Error('Please fill in all required fields');
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Mock API call delay
+      // Create a FormData object to handle file upload
+      const equipmentFormData = new FormData();
+      Object.keys(formData).forEach(key => {
+        if (key === 'availabilityDate') {
+          equipmentFormData.append(key, JSON.stringify(formData[key]));
+        } else {
+          equipmentFormData.append(key, formData[key]);
+        }
+      });
+
+      const result = await addEquipment(equipmentFormData);
+      console.log(result);
       toast.success('Equipment added successfully!');
       router.push('/dashboard');
     } catch (error) {
@@ -72,7 +84,7 @@ export default function AddEquipment() {
           <h1 className="add-equipment-title text-3xl font-bold mb-6 text-center">Add New Equipment</h1>
           {error && <p className="add-equipment-error text-red-500 mb-4">{error}</p>}
           <form onSubmit={handleSubmit} className="add-equipment-form space-y-4">
-            
+
             {/* Row 1: Equipment Name and Condition */}
             <div className="flex justify-between space-x-4">
               <div className="form-row flex-1">
@@ -89,20 +101,20 @@ export default function AddEquipment() {
                     onAction={(key) => setFormData({ ...formData, name: key })}
                   >
                     <DropdownItem key="Tractor">Tractor (ट्रॅक्टर)</DropdownItem>
-<DropdownItem key="Harvester">Harvester (हार्वेस्टर)</DropdownItem>
-<DropdownItem key="Khurp">Khurp (खुरपी)</DropdownItem>
-<DropdownItem key="Plow">Plow (हलकुंठ)</DropdownItem>
-<DropdownItem key="Seed Drill">Seed Drill (बीज ड्रिल)</DropdownItem>
-<DropdownItem key="Cultivator">Cultivator (कुल्टीव्हेटर)</DropdownItem>
-<DropdownItem key="Sprayer">Sprayer (स्प्रेयर)</DropdownItem>
-<DropdownItem key="Rotavator">Rotavator (रोटाव्हेटर)</DropdownItem>
-<DropdownItem key="Harvesting Machine">Harvesting Machine (हार्वेस्टिंग मशीन)</DropdownItem>
-<DropdownItem key="Fertilizer Spreader">Fertilizer Spreader (खते पसरवणारा)</DropdownItem>
+                    <DropdownItem key="Harvester">Harvester (हार्वेस्टर)</DropdownItem>
+                    <DropdownItem key="Khurp">Khurp (खुरपी)</DropdownItem>
+                    <DropdownItem key="Plow">Plow (हलकुंठ)</DropdownItem>
+                    <DropdownItem key="Seed Drill">Seed Drill (बीज ड्रिल)</DropdownItem>
+                    <DropdownItem key="Cultivator">Cultivator (कुल्टीव्हेटर)</DropdownItem>
+                    <DropdownItem key="Sprayer">Sprayer (स्प्रेयर)</DropdownItem>
+                    <DropdownItem key="Rotavator">Rotavator (रोटाव्हेटर)</DropdownItem>
+                    <DropdownItem key="Harvesting Machine">Harvesting Machine (हार्वेस्टिंग मशीन)</DropdownItem>
+                    <DropdownItem key="Fertilizer Spreader">Fertilizer Spreader (खते पसरवणारा)</DropdownItem>
 
                   </DropdownMenu>
                 </Dropdown>
               </div>
-              
+
               <div className="form-row flex-1">
                 <label className="text-sm font-medium mb-2">Condition</label>
                 <Dropdown>
@@ -141,7 +153,7 @@ export default function AddEquipment() {
 
               <div className="form-row flex-1">
                 <label className="text-sm font-medium mb-2">Availability Date</label>
-                <DateRangePicker 
+                <DateRangePicker
                   isRequired
                   defaultValue={{
                     start: parseDate("2024-04-01"),
@@ -230,7 +242,7 @@ export default function AddEquipment() {
               >
                 Submit
               </button>
-              </div>
+            </div>
           </form>
         </div>
       </div>
