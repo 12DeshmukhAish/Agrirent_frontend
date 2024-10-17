@@ -1,124 +1,121 @@
-"use client"; // Marking this component as a Client Component
+'use client'
 
-import { useState, useRef } from 'react';
-import Link from 'next/link';
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Input, Card, CardHeader, CardBody, Image } from "@nextui-org/react";
-import { SearchIcon } from "../components/ui/SearchIcon"; // Adjust this based on your icon path
+import { useState, useRef, useEffect } from 'react'
+import Link from 'next/link'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Input, Card, CardHeader, CardBody, Image } from "@nextui-org/react"
+import { SearchIcon } from "@/components/ui/SearchIcon"
+import { getAllEquipment } from '@/lib/api'
 
 export default function Home() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedEquipment, setSelectedEquipment] = useState(null); // State for selected equipment
-  const equipmentRefs = useRef([]); // Ref to store card references
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedEquipment, setSelectedEquipment] = useState(null)
+  const [equipmentItems, setEquipmentItems] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const equipmentRefs = useRef([])
 
-  // Array of equipment items
-  const equipmentItems = [
-    { title: 'Tractor', img: '/tractor.png', description: 'High power tractor for farming tasks.' },
-    { title: 'Harvester', img: '/harvestor.png', description: 'Efficient harvester for grain collection.' },
-    { title: 'Cultivator', img: '/cultivator.png', description: 'Ideal for preparing soil for planting.' },
-    { title: 'Rotavator', img: '/rotavator.png', description: 'Perfect for mixing soil and tilling.' },
-    { title: 'Ripper', img: '/ripper.png', description: 'Designed for breaking up hard soil.' },
-    { title: 'Thresher', img: '/threshor.png', description: 'Used for separating grain from chaff.' },
-    { title: 'Corn Planter', img: '/corn.png', description: 'Specialized planter for corn crops.' },
-    { title: 'Disc Plow', img: '/disc.png', description: 'Effective plow for turning over soil.' },
-  ];
-
-  // Filter items based on search term
-  const filteredItems = equipmentItems.filter(item =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  // Function to handle search input change
-  const handleSearchChange = (e) => {
-    const term = e.target.value;
-    setSearchTerm(term);
-
-    // Find the index of the first matched item
-    const matchedIndex = equipmentItems.findIndex(item => 
-      item.title.toLowerCase().includes(term.toLowerCase())
-    );
-
-    // Scroll to the first matched card if found
-    if (matchedIndex !== -1) {
-      equipmentRefs.current[matchedIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  useEffect(() => {
+    const fetchEquipment = async () => {
+      try {
+        setIsLoading(true)
+        const data = await getAllEquipment()
+        setEquipmentItems(Array.isArray(data) ? data : [])
+        setError(null)
+      } catch (err) {
+        console.error('Failed to fetch equipment:', err)
+        setError('Failed to load equipment. Please try again later.')
+        setEquipmentItems([])
+      } finally {
+        setIsLoading(false)
+      }
     }
-  };
+    fetchEquipment()
+  }, [])
 
-  // Function to handle the View Details button click
+  const filteredItems = equipmentItems.filter(item =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return '/placeholder.png'
+    if (imagePath.startsWith('http')) return imagePath
+    return `${process.env.NEXT_PUBLIC_API_URL}/uploads/${imagePath}`
+  }
+
+  const handleSearchChange = (e) => {
+    const term = e.target.value
+    setSearchTerm(term)
+
+    const matchedIndex = equipmentItems.findIndex(item =>
+      item.name.toLowerCase().includes(term.toLowerCase())
+    )
+
+    if (matchedIndex !== -1) {
+      equipmentRefs.current[matchedIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }
+
   const handleViewDetails = (item) => {
-    setSelectedEquipment(item); // Set the selected equipment for the modal
-  };
+    setSelectedEquipment(item)
+  }
 
-  // Function to close the modal
   const closeModal = () => {
-    setSelectedEquipment(null);
-  };
+    setSelectedEquipment(null)
+  }
 
   return (
     <>
-      {/* Navbar */}
-      <Navbar 
-        isBordered 
-        className="bg-gradient-to-r from-green-700 via-green-400 to-green-200 shadow-md p-2 sticky top-0 z-50" 
+      <Navbar
+        isBordered
+        className="bg-gradient-to-r from-green-700 via-green-400 to-green-200 shadow-md p-2 sticky top-0 z-50"
         isSticky
       >
         <div className="flex justify-between items-right w-full pl-0">
-          {/* AgriRent Brand on the far left */}
           <NavbarBrand className="flex items-center">
             <Image
-              src="/logo.jpg" // Adjust this to your logo path
+              src="/logo.jpg"
               alt="AgriRent Logo"
-              width={40} // Set logo width
-              height={40} // Set logo height
-              className="mr-2" // Add some margin to the right of the logo
+              width={40}
+              height={40}
+              className="mr-2"
             />
             <p className="font-bold text-inherit text-3xl pl-4">AgriRent</p>
           </NavbarBrand>
 
-          {/* Search bar centered */}
           <NavbarContent className="hidden sm:flex justify-center w-full mx-4">
             <Input
               classNames={{
                 base: "max-w-full sm:max-w-[20rem] h-10",
                 mainWrapper: "h-full",
-                input: "text-small text-black", // Set text color to black
-                inputWrapper: "h-full font-normal bg-white", // Set background color to white
+                input: "text-small text-black",
+                inputWrapper: "h-full font-normal bg-white",
               }}
               placeholder="Type to search..."
               size="sm"
               startContent={<SearchIcon size={18} />}
               type="search"
-              value={searchTerm} // Controlled input
-              onChange={handleSearchChange} // Update search term and handle scrolling
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
           </NavbarContent>
 
-          {/* Navbar links on the far right */}
           <NavbarContent justify="end" className="flex items-center space-x-3">
             <NavbarItem className="font-bold">
-              <Link href="/about" passHref>
-                About Us
-              </Link>
+              <Link href="/about">About Us</Link>
             </NavbarItem>
             <NavbarItem className="font-bold">
-              <Link href="/contact" passHref>
-                Contacts
-              </Link>
+              <Link href="/contact">Contacts</Link>
             </NavbarItem>
             <NavbarItem className="font-bold">
-              <Link href="/login" passHref>
-                Login
-              </Link>
+              <Link href="/login">Login</Link>
             </NavbarItem>
             <NavbarItem className="font-bold">
-              <Link href="/register" passHref>
-                Sign Up
-              </Link>
+              <Link href="/register">Sign Up</Link>
             </NavbarItem>
           </NavbarContent>
         </div>
       </Navbar>
 
-      {/* Main Section with sliding effect */}
       <main className="relative w-full h-screen bg-no-repeat bg-cover bg-center animate-slide-in" style={{ backgroundImage: "url('/agrirent3.jpg')" }}>
         <section className="text-left">
           <div className="absolute inset-0 flex flex-col items-start justify-center text-black pl-10 pb-5">
@@ -131,44 +128,55 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Cards Section */}
       <div className="bg-green-100 min-h-screen">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-8">
-          {filteredItems.map(({ title, img, description }, index) => (
-            <Card
-              key={index}
-              ref={el => equipmentRefs.current[index] = el} // Assign ref to each card
-              className={`py-4 shadow-lg shadow-black flex flex-col justify-between ${searchTerm && equipmentItems[index].title.toLowerCase().includes(searchTerm.toLowerCase()) ? 'bg-yellow-300' : ''}`} // Highlight if matched
-            >
-              <CardHeader className="pb-0 pt-2 px-4 flex-col items-center">
-                <h4 className="font-bold text-large text-black text-center">{title}</h4>
-              </CardHeader>
-              <CardBody className="flex-grow flex flex-col items-center justify-center">
-                <Image
-                  alt={title}
-                  className="object-cover rounded-xl mx-auto"
-                  src={img}
-                  width={150}
-                  height={150}
-                />
-                {/* View Details Button */}
-                <button 
-                  className="mt-4 bg-green-600 text-white font-bold py-2 px-4 rounded shadow-md hover:bg-green-700 transition duration-300"
-                  onClick={() => handleViewDetails({ title, img, description })} // Set selected equipment on click
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <p className="text-xl font-semibold">Loading equipment...</p>
+          </div>
+        ) : error ? (
+          <div className="flex justify-center items-center h-64">
+            <p className="text-xl font-semibold text-red-500">{error}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-8">
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item, index) => (
+                <Card
+                  key={item._id}
+                  ref={el => equipmentRefs.current[index] = el}
+                  className={`py-4 shadow-lg shadow-black flex flex-col justify-between ${searchTerm && item.name.toLowerCase().includes(searchTerm.toLowerCase()) ? 'bg-yellow-300' : ''}`}
                 >
-                  View Details
-                </button>
-              </CardBody>
-            </Card>
-          ))}
-        </div>
+                  <CardHeader className="pb-0 pt-2 px-4 flex-col items-center">
+                    <h4 className="font-bold text-large text-black text-center">{item.name}</h4>
+                  </CardHeader>
+                  <CardBody className="flex-grow flex flex-col items-center justify-center">
+                    <Image
+                      alt={item.name}
+                      className="object-cover rounded-xl mx-auto"
+                      src={getImageUrl(item.image)}  width={150}
+                      height={150}
+                    />
+                    <button
+                      className="mt-4 bg-green-600 text-white font-bold py-2 px-4 rounded shadow-md hover:bg-green-700 transition duration-300"
+                      onClick={() => handleViewDetails(item)}
+                    >
+                      View Details
+                    </button>
+                  </CardBody>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-full text-center">
+                <p className="text-xl font-semibold">No equipment found.</p>
+              </div>
+            )}
+          </div>
+        )}
 
-        {/* Modal for View Details */}
         {selectedEquipment && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-80 relative">
-              {/* Close Button */}
-              <button 
+              <button
                 className="absolute top-2 right-2 text-black hover:text-red-600"
                 onClick={closeModal}
                 aria-label="Close"
@@ -177,10 +185,11 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-              <h2 className="text-xl font-bold mb-4">{selectedEquipment.title}</h2>
+              <h2 className="text-xl font-bold mb-4">{selectedEquipment.name}</h2>
               <Image
-                alt={selectedEquipment.title}
-                src={selectedEquipment.img}
+                alt={selectedEquipment.name}
+
+                src={getImageUrl(selectedEquipment.image)}
                 width={150}
                 height={150}
                 className="mx-auto mb-4"
@@ -190,17 +199,14 @@ export default function Home() {
           </div>
         )}
 
-        {/* Footer */}
         <footer className="py-8 bg-orange-200 text-orange-400">
           <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-            {/* Footer Left: Copyright Information */}
             <div className="text-center md:text-left text-black">
               <p className="text-sm">&copy; 2024 AgriRent. All rights reserved.</p>
               <p className="text-sm mt-2">Contact: 9579112654</p>
               <p className="text-sm">Email: support@agrirent.com</p>
             </div>
 
-            {/* Footer Right: Social Media Links */}
             <div className="flex items-center space-x-6">
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-100 transition-colors">
                 <img src="/insta.png" alt="Instagram" className="w-10 h-10" />
@@ -213,5 +219,5 @@ export default function Home() {
         </footer>
       </div>
     </>
-  );
+  )
 }
