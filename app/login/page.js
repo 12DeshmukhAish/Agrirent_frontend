@@ -36,7 +36,6 @@ export default function Login() {
     try {
       const data = await loginUser(formData)
       
-      // Token is automatically stored in localStorage by loginUser function
       
       toast.success('Login successful!')
 
@@ -98,7 +97,7 @@ export default function Login() {
                 <Button type="button" className="login-cancel-button" onClick={() => router.push('/some-other-page')}>Cancel</Button>
               </div>
               <p className="text-center">
-              Already haven't an account?{' '}
+              Already haven&apos;t an account?{' '}
               <span className="text-blue-500 cursor-pointer" onClick={() => router.push('/register')}>Register</span>
             </p>
             </form>
