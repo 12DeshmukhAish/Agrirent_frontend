@@ -5,10 +5,10 @@ import { getUserBookings, getEquipment, createBooking, addEquipment, updateBooki
 import { Button, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Textarea, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Card, CardBody, CardFooter } from "@nextui-org/react"
 import { Plus, Calendar, Package, Loader, Edit, Trash } from 'lucide-react'
 import Image from 'next/image'
-import { toast } from 'sonner'
 import { DateRangePicker } from "@nextui-org/react"
 import { parseDate } from "@internationalized/date"
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import withAuth from '@/components/withAuth'
 import { isAuthenticated } from '@/lib/api'
 
@@ -34,7 +34,7 @@ const Dashboard = () => {
     contactNumber: '',
   })
   const router = useRouter()
-  
+
   useEffect(() => {
     if (!isAuthenticated()) {
       router.push('/login')
@@ -51,14 +51,14 @@ const Dashboard = () => {
         getEquipment(),
         getUserProfile()
       ])
-    
-      setBookings(bookingsData)
-      setEquipment(equipmentData)
+
+      setBookings(bookingsData || [])
+      setEquipment(equipmentData || [])
       setUserProfile(profileData)
     } catch (error) {
       console.error('Failed to fetch data:', error)
       toast.error('Failed to load dashboard data')
-      if (error.response && error.response.status === 401) {
+      if (error.response?.status === 401) {
         router.push('/login')
       }
     } finally {
@@ -67,6 +67,10 @@ const Dashboard = () => {
   }
 
   const handleCreateBooking = async () => {
+    if (!newBooking.equipmentId || !newBooking.rentalDate) {
+      toast.error('Please select equipment and rental date')
+      return
+    }
     try {
       await createBooking(newBooking)
       await fetchData()
@@ -79,6 +83,10 @@ const Dashboard = () => {
   }
 
   const handleUpdateBooking = async () => {
+    if (!editingBooking.equipmentId || !editingBooking.rentalDate) {
+      toast.error('Please fill all fields')
+      return
+    }
     try {
       await updateBooking(editingBooking._id, editingBooking)
       await fetchData()
@@ -104,33 +112,29 @@ const Dashboard = () => {
 
   const handleAddEquipment = async (e) => {
     e.preventDefault()
+    if (!newEquipment.name || !newEquipment.description || !newEquipment.image || !newEquipment.availabilityDate) {
+      toast.error('Please fill all fields')
+      return
+    }
     try {
       const formData = new FormData()
       Object.keys(newEquipment).forEach(key => {
-        if (key === 'availabilityDate') {
-          if (newEquipment[key]) {
-            const dateRange = {
-              start: {
-                year: newEquipment[key].start.year,
-                month: newEquipment[key].start.month,
-                day: newEquipment[key].start.day
-              },
-              end: {
-                year: newEquipment[key].end.year,
-                month: newEquipment[key].end.month,
-                day: newEquipment[key].end.day
-              }
+        if (key === 'availabilityDate' && newEquipment[key]) {
+          const dateRange = {
+            start: {
+              year: newEquipment[key].start.year,
+              month: newEquipment[key].start.month,
+              day: newEquipment[key].start.day
+            },
+            end: {
+              year: newEquipment[key].end.year,
+              month: newEquipment[key].end.month,
+              day: newEquipment[key].end.day
             }
-            formData.append(key, JSON.stringify(dateRange))
-          } else {
-            throw new Error('Availability date is required')
           }
+          formData.append(key, JSON.stringify(dateRange))
         } else if (key === 'image') {
-          if (newEquipment[key]) {
-            formData.append(key, newEquipment[key])
-          } else {
-            throw new Error('Image is required')
-          }
+          formData.append(key, newEquipment[key])
         } else {
           formData.append(key, newEquipment[key])
         }
@@ -142,35 +146,35 @@ const Dashboard = () => {
       toast.success('Equipment added successfully')
     } catch (error) {
       console.error('Failed to add equipment:', error)
-      toast.error(error.response?.data?.error || error.message || 'Failed to add equipment')
+      toast.error(error.message || 'Failed to add equipment')
     }
   }
 
   const handleUpdateEquipment = async (e) => {
     e.preventDefault()
+    if (!editingEquipment.name || !editingEquipment.description) {
+      toast.error('Please fill all fields')
+      return
+    }
     try {
       const formData = new FormData()
       Object.keys(editingEquipment).forEach(key => {
-        if (key === 'availabilityDate') {
-          if (editingEquipment[key]) {
-            const dateRange = {
-              start: {
-                year: editingEquipment[key].start.year,
-                month: editingEquipment[key].start.month,
-                day: editingEquipment[key].start.day
-              },
-              end: {
-                year: editingEquipment[key].end.year,
-                month: editingEquipment[key].end.month,
-                day: editingEquipment[key].end.day
-              }
+        if (key === 'availabilityDate' && editingEquipment[key]) {
+          const dateRange = {
+            start: {
+              year: editingEquipment[key].start.year,
+              month: editingEquipment[key].start.month,
+              day: editingEquipment[key].start.day
+            },
+            end: {
+              year: editingEquipment[key].end.year,
+              month: editingEquipment[key].end.month,
+              day: editingEquipment[key].end.day
             }
-            formData.append(key, JSON.stringify(dateRange))
           }
-        } else if (key === 'image') {
-          if (editingEquipment[key] && editingEquipment[key] instanceof File) {
-            formData.append(key, editingEquipment[key])
-          }
+          formData.append(key, JSON.stringify(dateRange))
+        } else if (key === 'image' && editingEquipment[key] instanceof File) {
+          formData.append(key, editingEquipment[key])
         } else {
           formData.append(key, editingEquipment[key])
         }
@@ -197,6 +201,7 @@ const Dashboard = () => {
       toast.error('Failed to delete equipment')
     }
   }
+
   const handleEquipmentChange = (e) => {
     const { name, value, files } = e.target
     if (name === 'image') {
@@ -205,7 +210,6 @@ const Dashboard = () => {
       setNewEquipment({ ...newEquipment, [name]: value })
     }
   }
-
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) return '/placeholder.png'
