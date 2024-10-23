@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Input, Card, CardHeader, CardBody, Image } from "@nextui-org/react"
+import { Card, CardHeader, CardBody, Image } from "@nextui-org/react"
 import { SearchIcon } from "@/components/ui/SearchIcon"
 import { getAllEquipment } from '@/lib/api'
 
@@ -65,59 +65,44 @@ export default function Home() {
 
   return (
     <>
-      <Navbar
-        isBordered
-        className="bg-gradient-to-r from-green-700 via-green-400 to-green-200 shadow-md p-2 sticky top-0 z-50"
-        isSticky
-      >
-        <div className="flex justify-between items-right w-full pl-0">
-          <NavbarBrand className="flex items-center">
+      <nav className="bg-gradient-to-r from-green-700 via-green-400 to-green-200 shadow-md p-4 sticky top-0 z-25">
+        <div className="container mx-auto flex justify-between items-center">
+          {/* Logo and Brand Section on the Left */}
+          <div className="flex items-center space-x-3">
             <Image
-              src="/logo.jpg"
+              src="/logo.png" // Replace with the path to your logo
               alt="AgriRent Logo"
-              width={40}
-              height={40}
-              className="mr-2"
+              width={50}
+              height={50}
             />
-            <p className="font-bold text-inherit text-3xl pl-4">AgriRent</p>
-          </NavbarBrand>
+            <p className="font-bold text-black text-3xl">AgriRent</p>
+          </div>
 
-          <NavbarContent className="hidden sm:flex justify-center w-full mx-4">
-            <Input
-              classNames={{
-                base: "max-w-full sm:max-w-[20rem] h-10",
-                mainWrapper: "h-full",
-                input: "text-small text-black",
-                inputWrapper: "h-full font-normal bg-white",
-              }}
-              placeholder="Type to search..."
-              size="sm"
-              startContent={<SearchIcon size={18} />}
-              type="search"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </NavbarContent>
+          {/* Search Bar Section at the Center */}
+          <div className="hidden sm:flex flex-grow justify-center mx-28">
+            <div className="relative w-full max-w-[24rem]">
+              <input
+                type="search"
+                className="w-full h-10 pl-10 pr-4 rounded-full bg-white shadow-sm text-black focus:outline-none"
+                placeholder="Search equipment, location..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+              <SearchIcon className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
+            </div>
+          </div>
 
-          <NavbarContent justify="end" className="ml-auto flex items-center space-x-3">
-  <NavbarItem className="font-bold">
-    <Link href="/about">About Us</Link>
-  </NavbarItem>
-  <NavbarItem className="font-bold">
-    <Link href="/contact">Contacts</Link>
-  </NavbarItem>
-  <NavbarItem className="font-bold">
-    <Link href="/login">Login</Link>
-  </NavbarItem>
-  <NavbarItem className="font-bold">
-    <Link href="/register">Sign Up</Link>
-  </NavbarItem>
-</NavbarContent>
-
+          {/* Navigation Links Section on the Right */}
+          <div className="flex items-center space-x-4">
+            <Link href="/about">About Us</Link>
+            <Link href="/contact">Contacts</Link>
+            <Link href="/login">Login</Link>
+            <Link href="/register">Sign Up</Link>
+          </div>
         </div>
-      </Navbar>
-
-      <main className="relative w-full h-screen bg-no-repeat bg-cover bg-center animate-slide-in" style={{ backgroundImage: "url('../pixelcut-export.jpeg')" }}>
+      </nav>
+      
+      <main className="relative w-full min-h-screen bg-no-repeat bg-cover bg-center pt-24" style={{ backgroundImage: "url('../pixelcut-export.jpeg')" }}>
         <section className="text-left">
           <div className="absolute inset-0 flex flex-col items-start justify-center text-black pl-10 pb-5">
             <h1 className="text-[70px] font-bold leading-tight mb-4">Welcome to AgriRent</h1>
@@ -129,7 +114,7 @@ export default function Home() {
         </section>
       </main>
 
-      <div className="bg-green-100 min-h-screen">
+      <div className="bg-green-100 min-h-screen pt-16"> {/* Adjusted padding-top to avoid overlap */}
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <p className="text-xl font-semibold">Loading equipment...</p>
@@ -154,7 +139,8 @@ export default function Home() {
                     <Image
                       alt={item.name}
                       className="object-cover rounded-xl mx-auto"
-                      src={getImageUrl(item.image)}  width={150}
+                      src={getImageUrl(item.image)} 
+                      width={150}
                       height={150}
                     />
                     <button
@@ -189,7 +175,6 @@ export default function Home() {
               <h2 className="text-xl font-bold mb-4">{selectedEquipment.name}</h2>
               <Image
                 alt={selectedEquipment.name}
-
                 src={getImageUrl(selectedEquipment.image)}
                 width={150}
                 height={150}
@@ -199,25 +184,6 @@ export default function Home() {
             </div>
           </div>
         )}
-
-        <footer className="py-8 bg-orange-200 text-orange-400">
-          <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-            <div className="text-center md:text-left text-black">
-              <p className="text-sm">&copy; 2024 AgriRent. All rights reserved.</p>
-              <p className="text-sm mt-2">Contact: 9579112654</p>
-              <p className="text-sm">Email: support@agrirent.com</p>
-            </div>
-
-            <div className="flex items-center space-x-6">
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-100 transition-colors">
-                <img src="/insta.png" alt="Instagram" className="w-10 h-10" />
-              </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-100 transition-colors">
-                <img src="/twitter.png" alt="Twitter" className="w-10 h-10" />
-              </a>
-            </div>
-          </div>
-        </footer>
       </div>
     </>
   )
