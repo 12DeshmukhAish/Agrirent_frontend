@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Input } from '@nextui-org/react'; // Ensure @nextui-org/react is installed
-import Image from 'next/image'; // Import Image component from Next.js
-import { toast } from 'sonner';
-import { registerUser } from '@/lib/api';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Input } from "@nextui-org/react"; // Ensure @nextui-org/react is installed
+import Image from "next/image"; // Import Image component from Next.js
+import { toast } from "sonner";
+import { registerUser } from "@/lib/api";
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    contactNumber: '',
-    address: '',
-    password: '',
-    confirmPassword: '',
+    fullName: "",
+    email: "",
+    contactNumber: "",
+    address: "",
+    password: "",
+    confirmPassword: "",
   });
   // Removed error state
   const router = useRouter();
@@ -28,48 +28,50 @@ export default function Register() {
 
     // Check if passwords match
     if (formData.password !== formData.confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error("Passwords do not match");
       return;
     }
 
     try {
-      const response = await registerUser(formData)
+      const response = await registerUser(formData);
       if (response) {
-        toast.success('Registration successful!');
+        toast.success("Registration successful!");
         setFormData({
-          fullName: '',
-          email: '',
-          contactNumber: '',
-          address: '',
-          password: '',
-          confirmPassword: '',
+          fullName: "",
+          email: "",
+          contactNumber: "",
+          address: "",
+          password: "",
+          confirmPassword: "",
         });
-        router.push('/login');
+        router.push("/login");
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || 'Registration failed. Please try again.');
+        toast.error(
+          errorData.error || "Registration failed. Please try again."
+        );
       }
     } catch (error) {
-      console.error('Error during registration:', error);
-      toast.error('Registration failed. Please try again.');
+      console.error("Error during registration:", error);
+      toast.error("Registration failed. Please try again.");
     }
   };
 
   const handleCancel = () => {
     setFormData({
-      fullName: '',
-      email: '',
-      contactNumber: '',
-      address: '',
-      password: '',
-      confirmPassword: '',
+      fullName: "",
+      email: "",
+      contactNumber: "",
+      address: "",
+      password: "",
+      confirmPassword: "",
     });
   };
 
   return (
     <div className="flex h-screen">
       {/* Left Side - Image */}
-      <div className="flex flex-col w-2/3 justify-center items-center bg-green-800 rounded-r-[20%] relative">
+      <div className="flex flex-col w-2/5 justify-center items-center bg-green-300 rounded-r-[20%] relative">
         <Image
           src="/backReg.png"
           width={700}
@@ -82,9 +84,11 @@ export default function Register() {
 
       {/* Right Side - Form */}
       <div className="flex w-1/2 justify-center items-center ">
-  <div className="w-[calc(100%_-_100px)] p-9 bg-white rounded-lg shadow-lg border border-black-200 text-center">
-    <h1 className="text-2xl font-bold text-center mb-6">Create Your Account</h1>
-            <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="w-[calc(100%_-_100px)] p-9 bg-white rounded-lg shadow-lg border border-black-200 text-center">
+          <h1 className="text-2xl font-bold text-center mb-6">
+            Create Your Account
+          </h1>
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Full Name and Email Input */}
             <div className="flex gap-6">
               <Input
@@ -195,12 +199,12 @@ export default function Register() {
             {/* Already Registered? Sign In Link */}
             <div className="text-center mt-4">
               <p className="text-gray-700">
-                Already have an account?{' '}
+                Already have an account?{" "}
                 <a
                   href="/login"
                   className="text-blue-500 font-semibold hover:underline"
                 >
-                  Sign Up
+                  Login
                 </a>
               </p>
             </div>
