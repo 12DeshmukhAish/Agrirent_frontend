@@ -94,14 +94,14 @@ export default function Home() {
 
           {/* Navigation Links Section on the Right */}
           <div className="flex items-center space-x-4">
-            <Link href="/about">About Us</Link>
-            <Link href="/contact">Contacts</Link>
-            <Link href="/login">Login</Link>
-            <Link href="/register">Sign Up</Link>
+            <Link href="/about" className="font-bold">About Us</Link>
+            <Link href="/contact" className="font-bold">Contacts</Link>
+            <Link href="/login" className="font-bold">Login</Link>
+            <Link href="/register" className="font-bold">Sign Up</Link>
           </div>
         </div>
       </nav>
-      
+
       <main className="relative w-full min-h-screen bg-no-repeat bg-cover bg-center pt-24" style={{ backgroundImage: "url('../pixelcut-export.jpeg')" }}>
         <section className="text-left">
           <div className="absolute inset-0 flex flex-col items-start justify-center text-black pl-10 pb-5">
@@ -139,7 +139,7 @@ export default function Home() {
                     <Image
                       alt={item.name}
                       className="object-cover rounded-xl mx-auto"
-                      src={getImageUrl(item.image)} 
+                      src={getImageUrl(item.image)}
                       width={150}
                       height={150}
                     />
