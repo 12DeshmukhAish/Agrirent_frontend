@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react'
-import Link from 'next/link'
-import { Card, CardHeader, CardBody, Image } from "@nextui-org/react"
-import { SearchIcon } from "@/components/ui/SearchIcon"
-import { getAllEquipment } from '@/lib/api'
+import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
+import { SearchIcon } from "@/components/ui/SearchIcon";
+import { getAllEquipment } from "@/lib/api";
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -68,51 +68,63 @@ export default function Home() {
 
   return (
     <>
-      <nav className="bg-gradient-to-r from-green-700 via-green-400 to-green-200 shadow-md p-4 sticky top-0 z-25">
-        <div className="container mx-auto flex justify-between items-center">
-          {/* Logo and Brand Section on the Left */}
-          <div className="flex items-center space-x-3">
-            <Image
-              src="/logo.png" // Replace with the path to your logo
-              alt="AgriRent Logo"
-              width={50}
-              height={50}
-            />
-            <p className="font-bold text-black text-3xl">AgriRent</p>
-          </div>
+      {/* Sticky Navbar */}
+      <nav class="bg-gradient-to-r from-green-700 via-green-400 to-green-200 shadow-md p-4 sticky top-0 z-30">
+  <div class="container mx-auto flex justify-between items-center">
+    <div class="flex items-center space-x-3">
+      <img src="/logo.png" alt="AgriRent Logo" width="50" height="50" />
+      <p class="font-bold text-black text-3xl">AgriRent</p>
+    </div>
 
-          {/* Search Bar Section at the Center */}
-          <div className="hidden sm:flex flex-grow justify-center mx-28">
-            <div className="relative w-full max-w-[24rem]">
-              <input
-                type="search"
-                className="w-full h-10 pl-10 pr-4 rounded-full bg-white shadow-sm text-black focus:outline-none"
-                placeholder="Search equipment, location..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
-              <SearchIcon className="absolute left-3 top-2.5 h-5 w-5 text-gray-500" />
-            </div>
-          </div>
+   
+    <div class="hidden sm:flex flex-grow justify-center mx-28">
+      <div class="relative w-full max-w-[24rem]">
+        <input
+          type="search"
+          class="w-full h-10 pl-10 pr-4 rounded-full bg-white shadow-sm text-black focus:outline-none"
+          placeholder="Search equipment, location..."
+        />
+        <svg
+          class="absolute left-3 top-2.5 h-5 w-5 text-gray-500"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M11 19a7.5 7.5 0 100-15 7.5 7.5 0 000 15zm10.708-9.708l-5.25 5.25"
+          />
+        </svg>
+      </div>
+    </div>
 
-          {/* Navigation Links Section on the Right */}
-          <div className="flex items-center space-x-4">
-            <Link href="/about" className="font-bold">About Us</Link>
-            <Link href="/contact" className="font-bold">Contacts</Link>
-            <Link href="/login" className="font-bold">Login</Link>
-            <Link href="/register" className="font-bold">Sign Up</Link>
-          </div>
-        </div>
-      </nav>
+ 
+    <div class="flex items-center space-x-4">
+      <a href="/about" class="font-bold">About Us</a>
+      <a href="/contact" class="font-bold">Contact</a>
+      <a href="/login" class="font-bold">Login</a>
+      <a href="/register" class="font-bold">Sign Up</a>
+    </div>
+  </div>
+</nav>
 
+
+      {/* Main Content */}
       <main
-        className="relative w-full min-h-screen bg-no-repeat bg-cover bg-center pt-24"
+        className="relative w-full min-h-screen bg-no-repeat bg-cover bg-center pt-24" // Added padding-top to prevent content overlap
         style={{ backgroundImage: "url('../pixelcut-export.jpeg')" }}
       >
         <section className="text-left">
           <div className="absolute inset-0 flex flex-col items-start justify-center text-black pl-10 pb-5 pt-24">
-            <h1 className="text-[70px] font-bold leading-tight mb-4">Welcome to AgriRent</h1>
-            <h3 className="text-[30px] font-semibold mb-4">Renting The Farm Equipment</h3>
+            <h1 className="text-[70px] font-bold leading-tight mb-4">
+              Welcome to AgriRent
+            </h1>
+            <h3 className="text-[30px] font-semibold mb-4">
+              Renting The Farm Equipment
+            </h3>
 
             <p className="text-[22px] text-left max-w-lg">
               AgriRent offers hassle-free farm equipment rentals at competitive
@@ -123,7 +135,8 @@ export default function Home() {
         </section>
       </main>
 
-      <div className="bg-green-100 min-h-screen pt-16"> {/* Adjusted padding-top to avoid overlap */}
+      <div className="bg-green-100 min-h-screen pt-16">
+        {/* Equipment Section */}
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <p className="text-xl font-semibold">Loading equipment...</p>
@@ -176,6 +189,7 @@ export default function Home() {
           </div>
         )}
 
+        {/* Modal for Selected Equipment */}
         {selectedEquipment && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-80 relative">
@@ -210,34 +224,28 @@ export default function Home() {
                 className="mx-auto mb-4"
               />
               <p>
-                {" "}<b>Condition:</b>{selectedEquipment.condition}
+                <b>Condition:</b> {selectedEquipment.condition}
               </p>
               <p>
-                <b>RentalPrice: </b>{selectedEquipment.rentalPrice}
+                <b>Rental Price: </b> {selectedEquipment.rentalPrice}
               </p>
               <p>
-                <b>AvailabilityDateStart:</b> {selectedEquipment.availabilityDateStart}
+                <b>Availability Date Start:</b>{" "}
+                {selectedEquipment.availabilityDateStart}
               </p>
               <p>
-                <b>AvailabilityDateEnd:</b>{selectedEquipment.availabilityDateEnd}
-              </p>
-              <p>
-                <b>OwnerName:</b>{selectedEquipment.ownerName}
-              </p>
-              <p>
-                <b>Address:</b>{selectedEquipment.address}
-              </p>
-              <p>
-                <b>Contact:</b>{selectedEquipment.contactNumber}
-              </p>
-              <p>
-                <b>Description:</b>{selectedEquipment.description}
+                <b>Availability Date End:</b>{" "}
+                {selectedEquipment.availabilityDateEnd}
               </p>
             </div>
           </div>
         )}
-        </div>
-         <footer className="py-8 bg-green-200 text-green-400">
+      </div>
+
+
+
+
+      <footer className="bg-gradient-to-r from-green-700 via-green-400 to-green-200 py-4">
           <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
             <div className="text-center md:text-left text-black">
               <p className="text-sm">
@@ -267,7 +275,6 @@ export default function Home() {
             </div>
           </div>
         </footer>
-      
     </>
   );
 }

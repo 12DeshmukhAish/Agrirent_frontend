@@ -228,20 +228,34 @@ const Dashboard = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Dashboard</h1>
-
+      
       {userProfile && (
-        <Card className="mb-8">
-          <CardBody>
-            <h2 className="text-2xl font-semibold mb-4">User Profile</h2>
-            <p><strong>Name:</strong> {userProfile.fullName}</p>
-            <p><strong>Email:</strong> {userProfile.email}</p>
-            <p><strong>Mobile:</strong> {userProfile.contactNumber}</p>
-            <p><strong>Address:</strong> {userProfile.address}</p>
-          </CardBody>
-        </Card>
-      )}
+  <Card className="mb-8 flex relative shadow-green"> {/* Flex container for the entire card with relative positioning */}
+    
+    <div className="absolute left-8 top-1/2 transform -translate-y-1/2 w-44 h-44 border-2 border-green-500 rounded-full flex items-center justify-center p-1"> {/* Outer container for the border */}
+  <div className="rounded-full overflow-hidden w-full h-full"> {/* Inner container for the image */}
+    <Image
+      src={userProfile.profileImage || "/avtar.jpg"} // Provide a default image if not available
+      alt="User Profile Image"
+      width={200} // You can adjust this if needed
+      height={200} // You can adjust this if needed
+      className="rounded-full object-cover h-full w-full" // Rounded image with full height and width
+    />
+  </div>
+</div>
 
-      <div className="flex justify-between mb-8">
+
+    <CardBody className="flex flex-col justify-between w-full ml-56"> {/* Increased left margin to avoid overlap with the image */}
+      <div>
+        <h2 className="text-2xl font-semibold mb-4">User Profile</h2>
+        <p className="text-gray-700"><strong>Name:</strong> {userProfile.fullName}</p>
+        <p className="text-gray-700"><strong>Email:</strong> {userProfile.email}</p>
+        <p className="text-gray-700"><strong>Mobile:</strong> {userProfile.contactNumber}</p>
+        <p className="text-gray-700"><strong>Address:</strong> {userProfile.address}</p>
+      </div>
+
+      {/* New Booking and Add Equipment buttons at the bottom */}
+      <div className="flex mt-4 space-x-4"> {/* Add margin to separate buttons from the content above */}
         <Button color="primary" startContent={<Calendar />} onPress={onBookingOpen}>
           New Booking
         </Button>
@@ -249,6 +263,19 @@ const Dashboard = () => {
           Add Equipment
         </Button>
       </div>
+    </CardBody>
+  </Card>
+)}
+
+
+      {/*<div className="flex justify-between mb-8">
+        <Button color="primary" startContent={<Calendar />} onPress={onBookingOpen}>
+          New Booking
+        </Button>
+        <Button color="secondary" startContent={<Package />} onPress={onEquipmentOpen}>
+          Add Equipment
+        </Button>
+      </div>*/}
 
       <h2 className="text-2xl font-semibold mb-4 text-gray-700">Your Bookings</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
