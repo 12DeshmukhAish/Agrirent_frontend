@@ -116,36 +116,31 @@ export default function Home() {
             </NavbarContent>
           </div>
 
-          {/* Right - Links */}
-          <NavbarContent justify="end" className="flex items-center space-x-3">
-            <NavbarItem className="font-bold">
-              <Link href="/about">About Us</Link>
-            </NavbarItem>
-            <NavbarItem className="font-bold">
-              <Link href="/contact">Contacts</Link>
-            </NavbarItem>
-            <NavbarItem className="font-bold">
-              <Link href="/login">Login</Link>
-            </NavbarItem>
-            <NavbarItem className="font-bold">
-              <Link href="/register">Register</Link>
-            </NavbarItem>
-          </NavbarContent>
+
+          <NavbarContent justify="end" className="ml-auto flex items-center space-x-3">
+  <NavbarItem className="font-bold">
+    <Link href="/about">About Us</Link>
+  </NavbarItem>
+  <NavbarItem className="font-bold">
+    <Link href="/contact">Contacts</Link>
+  </NavbarItem>
+  <NavbarItem className="font-bold">
+    <Link href="/login">Login</Link>
+  </NavbarItem>
+  <NavbarItem className="font-bold">
+    <Link href="/register">Sign Up</Link>
+  </NavbarItem>
+</NavbarContent>
+
         </div>
       </Navbar>
 
-      <main
-        className="relative w-full h-screen bg-no-repeat bg-cover bg-center animate-slide-in"
-        style={{ backgroundImage: "url('/agrirent3.jpg')" }}
-      >
+      <main className="relative w-full h-screen bg-no-repeat bg-cover bg-center animate-slide-in" style={{ backgroundImage: "url('../pixelcut-export.jpeg')" }}>
         <section className="text-left">
           <div className="absolute inset-0 flex flex-col items-start justify-center text-black pl-10 pb-5">
-            <h1 className="text-[70px] font-bold leading-tight mb-4">
-              Welcome to AgriRent
-            </h1>
-            <h3 className="text-[30px] font-semibold mb-4">
-              Renting The Best Farm Equipment
-            </h3>
+            <h1 className="text-[70px] font-bold leading-tight mb-4">Welcome to AgriRent</h1>
+            <h3 className="text-[30px] font-semibold mb-4">Renting The Farm Equipment</h3>
+
             <p className="text-[22px] text-left max-w-lg">
               AgriRent offers hassle-free farm equipment rentals at competitive
               prices. Access high-quality tools with flexible terms to optimize
