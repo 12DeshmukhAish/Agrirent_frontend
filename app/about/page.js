@@ -1,12 +1,79 @@
-// pages/about.js
+"use client"; 
 
-import React from 'react';
+import React, { useState } from 'react';
+import { FaBars } from 'react-icons/fa';
+import { FaInstagram, FaTwitter, FaFacebook } from 'react-icons/fa';
+import Link from 'next/link';
+
 
 const About = () => {
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Sidebar */}
+      <div
+        className={`fixed top-0 left-0 w-64 h-full bg-green-200 text-green-900 transform ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } transition-transform duration-300 ease-in-out z-50`}
+      >
+        <ul className="space-y-6 mt-12 p-4">
+  <li>
+    <Link href="/" className="block py-2 px-4 hover:bg-green-400">
+      Home
+    </Link>
+  </li>
+  <li>
+    <Link href="/dashboard" className="block py-2 px-4 hover:bg-green-400">
+      Dashboard
+    </Link>
+  </li>
+  <li>
+    <Link href="/equipment" className="block py-2 px-4 hover:bg-green-400">
+      Equipment
+    </Link>
+  </li>
+  <li>
+    <Link href="/aboutus" className="block py-2 px-4 hover:bg-green-400">
+      About Us
+    </Link>
+  </li>
+  <li>
+    <Link href="/contacts" className="block py-2 px-4 hover:bg-green-400">
+      Contacts
+    </Link>
+  </li>
+  <li>
+    <Link href="/login" className="block py-2 px-4 hover:bg-green-400">
+      Login
+    </Link>
+  </li>
+  <li>
+    <Link href="/signup" className="block py-2 px-4 hover:bg-green-400">
+      Signup
+    </Link>
+  </li>
+</ul>
+      </div>
+
+      {/* Toggle Button */}
+      <button
+        onClick={toggleSidebar}
+        className="fixed top-4 left-4 text-black bg-green-500 p-2 rounded-md focus:outline-none z-50"
+      >
+        <FaBars size={24} />
+      </button>
+
       {/* Main Content Wrapper */}
-      <div className="flex-grow bg-green-100 py-12">
+      <div
+        className={`flex-grow bg-green-100 py-12 transition-all duration-300 ease-in-out ${
+          isSidebarOpen ? 'ml-64' : 'ml-0'
+        }`}
+      >
         {/* Website Information Section */}
         <div className="about-section flex flex-col md:flex-row items-center md:justify-between container mx-auto mb-16">
           <div className="about-text w-full md:w-1/2 p-8 text-center md:text-left">
@@ -20,7 +87,7 @@ const About = () => {
               src="/abooutus.png"
               alt="About AgriRent"
               className="object-cover w-full h-80 rounded-lg shadow-md"
-              style={{ height: '400px', width: '100%' }} // Uniform height and width
+              style={{ height: '400px', width: '100%' }}
             />
           </div>
         </div>
@@ -38,7 +105,7 @@ const About = () => {
               src="/target.png"
               alt="Our Vision"
               className="object-cover w-full h-80 rounded-lg shadow-md"
-              style={{ height: '300px', width: '100%' }} // Uniform height and width
+              style={{ height: '300px', width: '100%' }}
             />
           </div>
         </div>
@@ -56,7 +123,7 @@ const About = () => {
               src="/mission.png"
               alt="Our Mission"
               className="object-cover w-full h-80 rounded-lg shadow-md"
-              style={{ height: '400px', width: '100%' }} // Uniform height and width
+              style={{ height: '400px', width: '100%' }}
             />
           </div>
         </div>
@@ -76,7 +143,7 @@ const About = () => {
               src="/working.png"
               alt="How It Works"
               className="object-cover w-full h-80 rounded-lg shadow-md"
-              style={{ height: '400px', width: '100%' }} // Uniform height and width
+              style={{ height: '400px', width: '100%' }}
             />
           </div>
         </div>
@@ -107,36 +174,48 @@ const About = () => {
         </div>
       </div>
 
-      {/* Footer Section */}
-      <footer className="bg-gradient-to-r from-green-700 via-green-400 to-green-200 py-4">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-          <div className="text-center md:text-left text-black">
-            <p className="text-sm">&copy; 2024 AgriRent. All rights reserved.</p>
-            <p className="text-sm mt-2">Contact: 9579112654</p>
-            <p className="text-sm">Email: support@agrirent.com</p>
-          </div>
-
-          {/* Footer Right: Social Media Links */}
-          <div className="flex items-center space-x-6">
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-100 transition-colors"
-            >
-              <img src="/insta.png" alt="Instagram" className="w-10 h-10" />
-            </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-100 transition-colors"
-            >
-              <img src="/twitter.png" alt="Twitter" className="w-10 h-10" />
-            </a>
-          </div>
+      {/* Footer */}
+      <footer className={`bg-gradient-to-r from-green-700 via-green-400 to-green-200 py-4 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+      <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+        <div className="text-center md:text-left text-black">
+          <p className="text-sm">
+            &copy; 2024 AgriRent. All rights reserved.
+          </p>
+          <p className="text-sm mt-2">Contact: 9579112654</p>
+          <p className="text-sm">Email: support@agrirent.com</p>
         </div>
-      </footer>
+
+        <div className="flex items-center space-x-6">
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-black hover:text-green-900 transition duration-200 flex items-center space-x-2"
+          >
+            <FaInstagram />
+            <span>Instagram</span>
+          </a>
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-black hover:text-green-900 transition duration-200 flex items-center space-x-2"
+          >
+            <FaTwitter />
+            <span>Twitter</span>
+          </a>
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-black hover:text-green-900 transition duration-200 flex items-center space-x-2"
+          >
+            <FaFacebook />
+            <span>Facebook</span>
+          </a>
+        </div>
+      </div>
+    </footer>
     </div>
   );
 };
