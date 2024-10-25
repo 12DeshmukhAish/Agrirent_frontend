@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'sonner';
 import { Button, Input } from '@nextui-org/react';
+import Sidebar from './Sidebar'; // Import the Sidebar component
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function ContactUs() {
     description: '',
   });
 
+  const [isSidebarOpen, setSidebarOpen] = useState(false); // State to manage sidebar visibility
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -46,13 +48,19 @@ export default function ContactUs() {
 
   return (
     <div className="contact-container flex items-center justify-center bg-green-100 relative min-h-screen">
-      <div className="contact-form-wrapper flex w-full max-w-4xl bg-white shadow-black shadow-lg rounded-lg overflow-hidden">
+      <button
+        className="absolute top-4 left-4 bg-green-500 text-white p-2 rounded shadow-md hover:bg-green-600"
+        onClick={() => setSidebarOpen(true)}
+      >
+        Open Sidebar
+      </button>
 
-        {/* Adjusted width for the image to 40% */}
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <div className="contact-form-wrapper flex w-full max-w-4xl bg-white shadow-black shadow-lg rounded-lg overflow-hidden">
         <div className="contact-image" style={{ flex: '0 0 50%' }}>
           <img src="/contact.png" alt="Contact Us" className="object-cover h-full w-full" />
         </div>
-        {/* Adjusted width for the form to 60% */}
         <div className="contact-form-container" style={{ flex: '0 0 50%' }}>
           <div className="p-10 flex flex-col justify-center">
             <h1 className="contact-title text-black-500 text-3xl font-bold mb-6">Contact Us</h1>
