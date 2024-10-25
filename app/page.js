@@ -69,53 +69,50 @@ export default function Home() {
   return (
     <>
       {/* Sticky Navbar */}
-      <nav class="bg-gradient-to-r from-green-700 via-green-400 to-green-200 shadow-md p-4 sticky top-0 z-30">
-  <div class="container mx-auto flex justify-between items-center">
-    <div class="flex items-center space-x-3">
-      <img src="/logo.png" alt="AgriRent Logo" width="50" height="50" />
-      <p class="font-bold text-black text-3xl">AgriRent</p>
-    </div>
+      <nav className="bg-gradient-to-r from-green-700 via-green-400 to-green-200 shadow-md p-4 sticky top-0 z-30">
+        <div className="container mx-auto flex justify-between items-center">
+          <div className="flex items-center space-x-3">
+            <img src="/logo.png" alt="AgriRent Logo" width="50" height="50" />
+            <p className="font-bold text-black text-3xl">AgriRent</p>
+          </div>
 
-   
-    <div class="hidden sm:flex flex-grow justify-center mx-28">
-      <div class="relative w-full max-w-[24rem]">
-        <input
-          type="search"
-          class="w-full h-10 pl-10 pr-4 rounded-full bg-white shadow-sm text-black focus:outline-none"
-          placeholder="Search equipment, location..."
-        />
-        <svg
-          class="absolute left-3 top-2.5 h-5 w-5 text-gray-500"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M11 19a7.5 7.5 0 100-15 7.5 7.5 0 000 15zm10.708-9.708l-5.25 5.25"
-          />
-        </svg>
-      </div>
-    </div>
+          <div className="hidden sm:flex flex-grow justify-center mx-28">
+            <div className="relative w-full max-w-[24rem]">
+              <input
+                type="search"
+                className="w-full h-10 pl-10 pr-4 rounded-full bg-white shadow-sm text-black focus:outline-none"
+                placeholder="Search equipment, location..."
+              />
+              <svg
+                className="absolute left-3 top-2.5 h-5 w-5 text-gray-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M11 19a7.5 7.5 0 100-15 7.5 7.5 0 000 15zm10.708-9.708l-5.25 5.25"
+                />
+              </svg>
+            </div>
+          </div>
 
- 
-    <div class="flex items-center space-x-4">
-      <a href="/about" class="font-bold">About Us</a>
-      <a href="/contact" class="font-bold">Contact</a>
-      <a href="/login" class="font-bold">Login</a>
-      <a href="/register" class="font-bold">Sign Up</a>
-      <a href="/dashboard" class="font-bold">Dashboard</a>
-    </div>
-  </div>
-</nav>
-
+          <div className="flex items-center space-x-4">
+            <a href="/about" className="font-bold">About Us</a>
+            <a href="/contact" className="font-bold">Contact</a>
+            <a href="/login" className="font-bold">Login</a>
+            <a href="/register" className="font-bold">Sign Up</a>
+            <a href="/dashboard" className="font-bold">Dashboard</a>
+          </div>
+        </div>
+      </nav>
 
       {/* Main Content */}
       <main
-        className="relative w-full min-h-screen bg-no-repeat bg-cover bg-center pt-24" // Added padding-top to prevent content overlap
+        className="relative w-full min-h-screen bg-no-repeat bg-cover bg-center pt-24"
         style={{ backgroundImage: "url('../pixelcut-export.jpeg')" }}
       >
         <section className="text-left">
@@ -126,7 +123,6 @@ export default function Home() {
             <h3 className="text-[30px] font-semibold mb-4">
               Renting The Farm Equipment
             </h3>
-
             <p className="text-[22px] text-left max-w-lg">
               AgriRent offers hassle-free farm equipment rentals at competitive
               prices. Access high-quality tools with flexible terms to optimize
@@ -243,39 +239,36 @@ export default function Home() {
         )}
       </div>
 
-
-
-
       <footer className="bg-gradient-to-r from-green-700 via-green-400 to-green-200 py-4">
-          <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-            <div className="text-center md:text-left text-black">
-              <p className="text-sm">
-                &copy; 2024 AgriRent. All rights reserved.
-              </p>
-              <p className="text-sm mt-2">Contact: 9579112654</p>
-              <p className="text-sm">Email: support@agrirent.com</p>
-            </div>
-
-            <div className="flex items-center space-x-6">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-gray-100 transition-colors"
-              >
-                <img src="/insta.png" alt="Instagram" className="w-10 h-10" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-gray-100 transition-colors"
-              >
-                <img src="/twitter.png" alt="Twitter" className="w-10 h-10" />
-              </a>
-            </div>
+        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+          <div className="text-center md:text-left text-black">
+            <p className="text-sm">
+              &copy; 2024 AgriRent. All rights reserved.
+            </p>
+            <p className="text-sm mt-2">Contact: 9579112654</p>
+            <p className="text-sm">Email: support@agrirent.com</p>
           </div>
-        </footer>
+
+          <div className="flex items-center space-x-6">
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-100 transition-colors"
+            >
+              <img src="/insta.png" alt="Instagram" className="w-10 h-10" />
+            </a>
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-100 transition-colors"
+            >
+              <img src="/twitter.png" alt="Twitter" className="w-10 h-10" />
+            </a>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }
