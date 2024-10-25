@@ -104,8 +104,8 @@ export default function Home() {
             <a href="/about" className="font-bold">About Us</a>
             <a href="/contact" className="font-bold">Contact</a>
             <a href="/login" className="font-bold">Login</a>
-            <a href="/register" className="font-bold">Sign Up</a>
-            <a href="/dashboard" className="font-bold">Dashboard</a>
+            <a href="/register" className="font-bold">Register</a>
+            <a href="/explore" className="font-bold">Equipment</a>
           </div>
         </div>
       </nav>
