@@ -37,13 +37,9 @@ const About = () => {
       Equipment
     </Link>
   </li>
+
   <li>
-    <Link href="/aboutus" className="block py-2 px-4 hover:bg-green-400">
-      About Us
-    </Link>
-  </li>
-  <li>
-    <Link href="/contacts" className="block py-2 px-4 hover:bg-green-400">
+    <Link href="/contact" className="block py-2 px-4 hover:bg-green-400">
       Contacts
     </Link>
   </li>
