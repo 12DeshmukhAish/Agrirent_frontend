@@ -1,18 +1,30 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 import { SearchIcon } from "@/components/ui/SearchIcon";
 import { getAllEquipment } from "@/lib/api";
+// Add the formatDate function
+const formatDate = (dateString) => {
+  if (!dateString) return "Not specified";
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
 
 export default function Home() {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedEquipment, setSelectedEquipment] = useState(null);
   const [equipmentItems, setEquipmentItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const equipmentRefs = useRef([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchEquipment = async () => {
@@ -29,8 +41,48 @@ export default function Home() {
         setIsLoading(false);
       }
     };
+
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem('token'); // Or your auth method
+      setIsLoggedIn(!!token);
+    };
+
     fetchEquipment();
+    checkLoginStatus();
   }, []);
+
+  const handleBooking = async (item) => {
+    if (!isLoggedIn) {
+      if (window.confirm('Please login to book equipment. Would you like to login now?')) {
+        router.push('/login');
+      }
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // Add your auth token
+        },
+        body: JSON.stringify({
+          equipmentId: item._id,
+          startDate: item.availabilityDateStart,
+          endDate: item.availabilityDateEnd,
+        })
+      });
+
+      if (response.ok) {
+        alert('Booking successful!');
+      } else {
+        throw new Error('Booking failed');
+      }
+    } catch (error) {
+      alert('Failed to book equipment. Please try again.');
+      console.error('Booking error:', error);
+    }
+  };
 
   const filteredItems = equipmentItems.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -82,6 +134,8 @@ export default function Home() {
                 type="search"
                 className="w-full h-10 pl-10 pr-4 rounded-full bg-white shadow-sm text-black focus:outline-none"
                 placeholder="Search equipment, location..."
+                value={searchTerm}
+                onChange={handleSearchChange}
               />
               <svg
                 className="absolute left-3 top-2.5 h-5 w-5 text-gray-500"
@@ -133,7 +187,6 @@ export default function Home() {
       </main>
 
       <div className="bg-green-100 min-h-screen pt-16">
-        {/* Equipment Section */}
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <p className="text-xl font-semibold">Loading equipment...</p>
@@ -143,38 +196,51 @@ export default function Home() {
             <p className="text-xl font-semibold text-red-500">{error}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 p-8">
             {filteredItems.length > 0 ? (
               filteredItems.map((item, index) => (
                 <Card
                   key={item._id}
                   ref={(el) => (equipmentRefs.current[index] = el)}
-                  className={`py-4 shadow-lg shadow-black flex flex-col justify-between ${
-                    searchTerm &&
-                    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-                      ? "bg-yellow-300"
-                      : ""
-                  }`}
+                  className="hover:shadow-xl transition-all duration-300 bg-white rounded-xl overflow-hidden"
                 >
-                  <CardHeader className="pb-0 pt-2 px-4 flex-col items-center">
-                    <h4 className="font-bold text-large text-black text-center">
+                  <CardHeader className="pb-0 pt-4 px-4">
+                    <h4 className="font-bold text-xl text-center w-full">
                       {item.name}
                     </h4>
                   </CardHeader>
-                  <CardBody className="flex-grow flex flex-col items-center justify-center">
-                    <Image
-                      alt={item.name}
-                      className="object-cover rounded-xl mx-auto"
-                      src={getImageUrl(item.image)}
-                      width={150}
-                      height={150}
-                    />
-                    <button
-                      className="mt-4 bg-green-600 text-white font-bold py-2 px-4 rounded shadow-md hover:bg-green-700 transition duration-300"
-                      onClick={() => handleViewDetails(item)}
-                    >
-                      View Details
-                    </button>
+                  <CardBody className="py-4">
+                    <div className="relative group">
+                      <Image
+                        alt={item.name}
+                        className="object-cover rounded-xl w-full h-48 transition-transform duration-300 group-hover:scale-105"
+                        src={getImageUrl(item.image)}
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-xl" />
+                    </div>
+                    
+                    <div className="mt-4 space-y-2">
+                      <p className="text-gray-600">
+                        <span className="font-semibold">Condition:</span> {item.condition}
+                      </p>
+                      <p className="text-green-600 font-bold">
+                        ₹{item.rentalPrice}/day
+                      </p>
+                      <div className="flex gap-2 mt-4">
+                        <button
+                          className="flex-1 bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300"
+                          onClick={() => handleViewDetails(item)}
+                        >
+                          View Details
+                        </button>
+                        <button
+                          className="flex-1 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300"
+                          onClick={() => handleBooking(item)}
+                        >
+                          Book Now
+                        </button>
+                      </div>
+                    </div>
                   </CardBody>
                 </Card>
               ))
@@ -186,12 +252,13 @@ export default function Home() {
           </div>
         )}
 
-        {/* Modal for Selected Equipment */}
+
+        {/* Detailed Modal */}
         {selectedEquipment && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-80 relative">
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
+            <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative">
               <button
-                className="absolute top-2 right-2 text-black hover:text-red-600"
+                className="absolute top-4 right-4 text-gray-500 hover:text-red-600 transition-colors duration-300"
                 onClick={closeModal}
                 aria-label="Close"
               >
@@ -210,34 +277,79 @@ export default function Home() {
                   />
                 </svg>
               </button>
-              <h2 className="text-xl font-bold mb-4">
+              
+              <h2 className="text-2xl font-bold mb-6 pr-8">
                 {selectedEquipment.name}
               </h2>
+              
               <Image
                 alt={selectedEquipment.name}
                 src={getImageUrl(selectedEquipment.image)}
-                width={150}
-                height={150}
-                className="mx-auto mb-4"
+                className="mx-auto mb-6 rounded-lg h-64 w-full object-cover"
               />
-              <p>
-                <b>Condition:</b> {selectedEquipment.condition}
-              </p>
-              <p>
-                <b>Rental Price: </b> {selectedEquipment.rentalPrice}
-              </p>
-              <p>
-                <b>Availability Date Start:</b>{" "}
-                {selectedEquipment.availabilityDateStart}
-              </p>
-              <p>
-                <b>Availability Date End:</b>{" "}
-                {selectedEquipment.availabilityDateEnd}
-              </p>
+              
+              <div className="space-y-4">
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="font-semibold text-lg mb-2">Description</h3>
+                  <p className="text-gray-700">{selectedEquipment.description}</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-4">
+                    <div>
+                      <span className="font-semibold block">Condition:</span>
+                      <span className="text-gray-700">{selectedEquipment.condition}</span>
+                    </div>
+                    
+                    <div>
+                      <span className="font-semibold block">Rental Price:</span>
+                      <span className="text-green-600 font-bold">
+                        ₹{selectedEquipment.rentalPrice}/day
+                      </span>
+                    </div>
+                    
+                    <div>
+                      <span className="font-semibold block">Available From:</span>
+                      <span>{formatDate(selectedEquipment.availabilityDateStart)}</span>
+                    </div>
+                    
+                    <div>
+                      <span className="font-semibold block">Available Until:</span>
+                      <span>{formatDate(selectedEquipment.availabilityDateEnd)}</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <span className="font-semibold block">Owner:</span>
+                      <span className="text-gray-700">{selectedEquipment.ownerName}</span>
+                    </div>
+                    
+                    <div>
+                      <span className="font-semibold block">Contact Number:</span>
+                      <span className="text-gray-700">{selectedEquipment.contactNumber}</span>
+                    </div>
+                    
+                    <div>
+                      <span className="font-semibold block">Address:</span>
+                      <span className="text-gray-700">{selectedEquipment.address}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <button
+                  className="w-full mt-6 bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-300"
+                  onClick={() => handleBooking(selectedEquipment)}
+                >
+                  Book Now
+                </button>
+              </div>
             </div>
           </div>
         )}
       </div>
+   
+ 
 
       <footer className="bg-gradient-to-r from-green-700 via-green-400 to-green-200 py-4">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
@@ -261,7 +373,7 @@ export default function Home() {
             <a
               href="https://twitter.com"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer" 
               className="hover:text-gray-100 transition-colors"
             >
               <img src="/twitter.png" alt="Twitter" className="w-10 h-10" />
