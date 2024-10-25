@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'sonner';
 import { Button, Input } from '@nextui-org/react';
-import Sidebar from './Sidebar'; // Import the Sidebar component
+import { FaBars } from 'react-icons/fa';
+// import Sidebar from './Sidebar'; // Import the Sidebar component
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
@@ -12,6 +13,11 @@ export default function ContactUs() {
     email: '',
     description: '',
   });
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
+
 
   const [isSidebarOpen, setSidebarOpen] = useState(false); // State to manage sidebar visibility
   const router = useRouter();
@@ -23,10 +29,7 @@ export default function ContactUs() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Replace this with actual submission logic
       console.log(formData); // This simulates form submission
-
-      // Display success toast message
       toast.success('Your message has been sent successfully!');
 
       // Clear form after submission
@@ -40,22 +43,60 @@ export default function ContactUs() {
       // router.push('/thank-you');
     } catch (error) {
       console.error('Submission failed:', error);
-
-      // Display error toast message
       toast.error('Failed to send your message. Please try again.');
     }
   };
 
+
   return (
     <div className="contact-container flex items-center justify-center bg-green-100 relative min-h-screen">
-      <button
-        className="absolute top-4 left-4 bg-green-500 text-white p-2 rounded shadow-md hover:bg-green-600"
-        onClick={() => setSidebarOpen(true)}
+      {/* Sidebar */}
+      <div
+        className={`fixed top-0 left-0 w-64 h-full bg-green-200 text-green-900 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } transition-transform duration-300 ease-in-out z-50`}
       >
-        Open Sidebar
-      </button>
+        <ul className="space-y-6 mt-12 p-4">
+          <li>
+            <a href="/" className="block py-2 px-4 hover:bg-green-400">
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="/dashboard" className="block py-2 px-4 hover:bg-green-400">
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="/equipment" className="block py-2 px-4 hover:bg-green-400">
+              Equipment
+            </a>
+          </li>
+          <li>
+            <a href="/about" className="block py-2 px-4 hover:bg-green-400">
+              About Us
+            </a>
+          </li>
+          
+          <li>
+            <a href="/login" className="block py-2 px-4 hover:bg-green-400">
+              Login
+            </a>
+          </li>
+          <li>
+            <a href="/signup" className="block py-2 px-4 hover:bg-green-400">
+              Signup
+            </a>
+          </li>
+        </ul>
+      </div>
 
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
+      {/* Toggle Button */}
+      <button
+        onClick={toggleSidebar}
+        className="fixed top-4 left-4 text-black bg-green-500 p-2 rounded-md focus:outline-none z-50"
+      >
+        <FaBars size={24} />
+      </button>
 
       <div className="contact-form-wrapper flex w-full max-w-4xl bg-white shadow-black shadow-lg rounded-lg overflow-hidden">
         <div className="contact-image" style={{ flex: '0 0 50%' }}>
