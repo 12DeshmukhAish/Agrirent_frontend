@@ -268,14 +268,6 @@ const Dashboard = () => {
 )}
 
 
-      {/*<div className="flex justify-between mb-8">
-        <Button color="primary" startContent={<Calendar />} onPress={onBookingOpen}>
-          New Booking
-        </Button>
-        <Button color="secondary" startContent={<Package />} onPress={onEquipmentOpen}>
-          Add Equipment
-        </Button>
-      </div>*/}
 
       <h2 className="text-2xl font-semibold mb-4 text-gray-700">Your Bookings</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -536,7 +528,7 @@ const Dashboard = () => {
         </ModalContent>
       </Modal>
     </div>
-  )
+  ) 
 }
 
 export default withAuth(Dashboard);
