@@ -61,13 +61,13 @@ export default function ContactUs() {
               Home
             </a>
           </li>
-          <li>
+          {/* <li>
             <a href="/dashboard" className="block py-2 px-4 hover:bg-green-400">
               Dashboard
             </a>
-          </li>
+          </li> */}
           <li>
-            <a href="/equipment" className="block py-2 px-4 hover:bg-green-400">
+            <a href="/explore" className="block py-2 px-4 hover:bg-green-400">
               Equipment
             </a>
           </li>
@@ -83,8 +83,8 @@ export default function ContactUs() {
             </a>
           </li>
           <li>
-            <a href="/signup" className="block py-2 px-4 hover:bg-green-400">
-              Signup
+            <a href="/register" className="block py-2 px-4 hover:bg-green-400">
+              Register
             </a>
           </li>
         </ul>

@@ -27,13 +27,13 @@ const About = () => {
       Home
     </Link>
   </li>
-  <li>
+  {/* <li>
     <Link href="/dashboard" className="block py-2 px-4 hover:bg-green-400">
       Dashboard
     </Link>
-  </li>
+  </li> */}
   <li>
-    <Link href="/equipment" className="block py-2 px-4 hover:bg-green-400">
+    <Link href="/explore" className="block py-2 px-4 hover:bg-green-400">
       Equipment
     </Link>
   </li>
@@ -49,8 +49,8 @@ const About = () => {
     </Link>
   </li>
   <li>
-    <Link href="/signup" className="block py-2 px-4 hover:bg-green-400">
-      Signup
+    <Link href="/register" className="block py-2 px-4 hover:bg-green-400">
+      Register
     </Link>
   </li>
 </ul>
