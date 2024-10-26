@@ -4,6 +4,12 @@ import React, { useState } from 'react';
 import { FaBars } from 'react-icons/fa';
 import { FaInstagram, FaTwitter, FaFacebook } from 'react-icons/fa';
 import Link from 'next/link';
+import { AiFillHome, AiOutlineLogin, AiOutlineUserAdd } from "react-icons/ai";
+import { MdBuild } from "react-icons/md";
+import { BsInfoCircleFill } from "react-icons/bs";
+import { FiLogOut, FiPhone } from "react-icons/fi"; // Import the contact icon
+
+
 
 
 const About = () => {
@@ -22,37 +28,37 @@ const About = () => {
         } transition-transform duration-300 ease-in-out z-50`}
       >
         <ul className="space-y-6 mt-12 p-4">
-  <li>
-    <Link href="/" className="block py-2 px-4 hover:bg-green-400">
-      Home
-    </Link>
-  </li>
-  {/* <li>
-    <Link href="/dashboard" className="block py-2 px-4 hover:bg-green-400">
-      Dashboard
-    </Link>
-  </li> */}
-  <li>
-    <Link href="/explore" className="block py-2 px-4 hover:bg-green-400">
-      Equipment
-    </Link>
-  </li>
-
-  <li>
-    <Link href="/contact" className="block py-2 px-4 hover:bg-green-400">
-      Contacts
-    </Link>
-  </li>
-  <li>
-    <Link href="/login" className="block py-2 px-4 hover:bg-green-400">
-      Login
-    </Link>
-  </li>
-  <li>
-    <Link href="/register" className="block py-2 px-4 hover:bg-green-400">
-      Register
-    </Link>
-  </li>
+        <li>
+          <a href="/" className="flex items-center py-2 px-4 hover:bg-green-400">
+            <AiFillHome className="mr-2" />
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="/explore" className="flex items-center py-2 px-4 hover:bg-green-400">
+            <MdBuild className="mr-2" />
+            Equipment
+          </a>
+        </li>
+        
+        <li>
+          <a href="/contacts" className="flex items-center py-2 px-4 hover:bg-green-400">
+            <FiPhone className="mr-2" />
+            Contacts
+          </a>
+        </li>
+        <li>
+          <a href="/login" className="flex items-center py-2 px-4 hover:bg-green-400">
+            <AiOutlineLogin className="mr-2" />
+            Login
+          </a>
+        </li>
+        <li>
+          <a href="/register" className="flex items-center py-2 px-4 hover:bg-green-400">
+            <AiOutlineUserAdd className="mr-2" />
+            Register
+          </a>
+        </li>
 </ul>
       </div>
 

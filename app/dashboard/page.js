@@ -1,40 +1,87 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react'
-import { getUserBookings, getEquipment, createBooking, addEquipment, updateBooking, deleteBooking, updateEquipment, deleteEquipment, getUserProfile } from '@/lib/api'
-import { Button, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Textarea, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Card, CardBody, CardFooter } from "@nextui-org/react"
-import { Plus, Calendar, Package, Loader, Edit, Trash } from 'lucide-react'
-import Image from 'next/image'
-import { DateRangePicker } from "@nextui-org/react"
-import { parseDate } from "@internationalized/date"
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
-import withAuth from '@/components/withAuth'
-import { isAuthenticated } from '@/lib/api'
-import { FaBars } from 'react-icons/fa';
+import { useEffect, useState } from "react";
+import {
+  getUserBookings,
+  getEquipment,
+  createBooking,
+  addEquipment,
+  updateBooking,
+  deleteBooking,
+  updateEquipment,
+  deleteEquipment,
+  getUserProfile,
+} from "@/lib/api";
+import {
+  Button,
+  Input,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Textarea,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Card,
+  CardBody,
+  CardFooter,
+} from "@nextui-org/react";
+import { Plus, Calendar, Package, Loader, Edit, Trash } from "lucide-react";
+import Image from "next/image";
+import { DateRangePicker } from "@nextui-org/react";
+import { parseDate } from "@internationalized/date";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import withAuth from "@/components/withAuth";
+import { isAuthenticated } from "@/lib/api";
+import { FaBars } from "react-icons/fa";
+import { AiFillHome, AiOutlineLogin, AiOutlineUserAdd } from "react-icons/ai";
+import { MdBuild } from "react-icons/md";
+import { BsInfoCircleFill } from "react-icons/bs";
+import { FiLogOut, FiPhone } from "react-icons/fi"; // Import the contact icon
+
+
+
+
+
 
 const Dashboard = () => {
-  const [bookings, setBookings] = useState([])
-  const [equipment, setEquipment] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [userProfile, setUserProfile] = useState(null)
-  const [editingBooking, setEditingBooking] = useState(null)
-  const [editingEquipment, setEditingEquipment] = useState(null)
-  const { isOpen: isBookingOpen, onOpen: onBookingOpen, onClose: onBookingClose } = useDisclosure()
-  const { isOpen: isEquipmentOpen, onOpen: onEquipmentOpen, onClose: onEquipmentClose } = useDisclosure()
-  const [newBooking, setNewBooking] = useState({ equipmentId: '', rentalDate: '' })
+  const [bookings, setBookings] = useState([]);
+  const [equipment, setEquipment] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState(null);
+  const [editingBooking, setEditingBooking] = useState(null);
+  const [editingEquipment, setEditingEquipment] = useState(null);
+  const {
+    isOpen: isBookingOpen,
+    onOpen: onBookingOpen,
+    onClose: onBookingClose,
+  } = useDisclosure();
+  const {
+    isOpen: isEquipmentOpen,
+    onOpen: onEquipmentOpen,
+    onClose: onEquipmentClose,
+  } = useDisclosure();
+  const [newBooking, setNewBooking] = useState({
+    equipmentId: "",
+    rentalDate: "",
+  });
   const [newEquipment, setNewEquipment] = useState({
-    name: '',
-    description: '',
-    condition: 'Good',
-    rentalPrice: '',
+    name: "",
+    description: "",
+    condition: "Good",
+    rentalPrice: "",
     availabilityDate: null,
     image: null,
-    ownerName: '',
-    address: '',
-    contactNumber: '',
-  })
-  const router = useRouter()
+    ownerName: "",
+    address: "",
+    contactNumber: "",
+  });
+  const router = useRouter();
 
   const [isClient, setIsClient] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
@@ -45,33 +92,32 @@ const Dashboard = () => {
     setIsClient(true);
 
     const fetchData = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
         const [bookingsData, equipmentData, profileData] = await Promise.all([
           getUserBookings(),
           getEquipment(),
-          getUserProfile()
-        ])
-  
-        setBookings(bookingsData || [])
-        setEquipment(equipmentData || [])
-        setUserProfile(profileData)
+          getUserProfile(),
+        ]);
+
+        setBookings(bookingsData || []);
+        setEquipment(equipmentData || []);
+        setUserProfile(profileData);
       } catch (error) {
-        console.error('Failed to fetch data:', error)
-        toast.error('Failed to load dashboard data')
+        console.error("Failed to fetch data:", error);
+        toast.error("Failed to load dashboard data");
         if (error.response?.status === 401) {
-          router.push('/login')
+          router.push("/login");
         }
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
-  
+    };
 
     // Perform authentication check only on the client
     if (isClient) {
       if (!isAuthenticated()) {
-        router.push('/login');
+        router.push("/login");
       } else {
         setAuthenticated(true); // User is authenticated
         fetchData(); // Call your data-fetching function
@@ -81,209 +127,249 @@ const Dashboard = () => {
 
   if (!isClient || !authenticated) return null; // P
 
-
   const handleCreateBooking = async () => {
     if (!newBooking.equipmentId || !newBooking.rentalDate) {
-      toast.error('Please select equipment and rental date')
-      return
+      toast.error("Please select equipment and rental date");
+      return;
     }
     try {
-      await createBooking(newBooking)
-      await fetchData()
-      onBookingClose()
-      toast.success('Booking created successfully')
+      await createBooking(newBooking);
+      await fetchData();
+      onBookingClose();
+      toast.success("Booking created successfully");
     } catch (error) {
-      console.error('Failed to create booking:', error)
-      toast.error('Failed to create booking')
+      console.error("Failed to create booking:", error);
+      toast.error("Failed to create booking");
     }
-  }
-  
-  
+  };
+
 
   const handleUpdateBooking = async () => {
     if (!editingBooking.equipmentId || !editingBooking.rentalDate) {
-      toast.error('Please fill all fields')
-      return
+      toast.error("Please fill all fields");
+      return;
     }
     try {
-      await updateBooking(editingBooking._id, editingBooking)
-      await fetchData()
-      setEditingBooking(null)
-      onBookingClose()
-      toast.success('Booking updated successfully')
+      await updateBooking(editingBooking._id, editingBooking);
+      await fetchData();
+      setEditingBooking(null);
+      onBookingClose();
+      toast.success("Booking updated successfully");
     } catch (error) {
-      console.error('Failed to update booking:', error)
-      toast.error('Failed to update booking')
+      console.error("Failed to update booking:", error);
+      toast.error("Failed to update booking");
     }
-  }
+  };
 
   const handleDeleteBooking = async (bookingId) => {
     try {
-      await deleteBooking(bookingId)
-      await fetchData()
-      toast.success('Booking deleted successfully')
+      await deleteBooking(bookingId);
+      await fetchData();
+      toast.success("Booking deleted successfully");
     } catch (error) {
-      console.error('Failed to delete booking:', error)
-      toast.error('Failed to delete booking')
+      console.error("Failed to delete booking:", error);
+      toast.error("Failed to delete booking");
     }
-  }
+  };
 
   const handleAddEquipment = async (e) => {
-    e.preventDefault()
-    if (!newEquipment.name || !newEquipment.description || !newEquipment.image || !newEquipment.availabilityDate) {
-      toast.error('Please fill all fields')
-      return
+    e.preventDefault();
+    if (
+      !newEquipment.name ||
+      !newEquipment.description ||
+      !newEquipment.image ||
+      !newEquipment.availabilityDate
+    ) {
+      toast.error("Please fill all fields");
+      return;
     }
     try {
-      const formData = new FormData()
-      Object.keys(newEquipment).forEach(key => {
-        if (key === 'availabilityDate' && newEquipment[key]) {
+      const formData = new FormData();
+      Object.keys(newEquipment).forEach((key) => {
+        if (key === "availabilityDate" && newEquipment[key]) {
           const dateRange = {
             start: {
               year: newEquipment[key].start.year,
               month: newEquipment[key].start.month,
-              day: newEquipment[key].start.day
+              day: newEquipment[key].start.day,
             },
             end: {
               year: newEquipment[key].end.year,
               month: newEquipment[key].end.month,
-              day: newEquipment[key].end.day
-            }
-          }
-          formData.append(key, JSON.stringify(dateRange))
-        } else if (key === 'image') {
-          formData.append(key, newEquipment[key])
+              day: newEquipment[key].end.day,
+            },
+          };
+          formData.append(key, JSON.stringify(dateRange));
+        } else if (key === "image") {
+          formData.append(key, newEquipment[key]);
         } else {
-          formData.append(key, newEquipment[key])
+          formData.append(key, newEquipment[key]);
         }
-      })
+      });
 
-      await addEquipment(formData)
-      await fetchData()
-      onEquipmentClose()
-      toast.success('Equipment added successfully')
+      await addEquipment(formData);
+      await fetchData();
+      onEquipmentClose();
+      toast.success("Equipment added successfully");
     } catch (error) {
-      console.error('Failed to add equipment:', error)
-      toast.error(error.message || 'Failed to add equipment')
+      console.error("Failed to add equipment:", error);
+      toast.error(error.message || "Failed to add equipment");
     }
-  }
+  };
 
   const handleUpdateEquipment = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!editingEquipment.name || !editingEquipment.description) {
-      toast.error('Please fill all fields')
-      return
+      toast.error("Please fill all fields");
+      return;
     }
     try {
-      const formData = new FormData()
-      Object.keys(editingEquipment).forEach(key => {
-        if (key === 'availabilityDate' && editingEquipment[key]) {
+      const formData = new FormData();
+      Object.keys(editingEquipment).forEach((key) => {
+        if (key === "availabilityDate" && editingEquipment[key]) {
           const dateRange = {
             start: {
               year: editingEquipment[key].start.year,
               month: editingEquipment[key].start.month,
-              day: editingEquipment[key].start.day
+              day: editingEquipment[key].start.day,
             },
             end: {
               year: editingEquipment[key].end.year,
               month: editingEquipment[key].end.month,
-              day: editingEquipment[key].end.day
-            }
-          }
-          formData.append(key, JSON.stringify(dateRange))
-        } else if (key === 'image' && editingEquipment[key] instanceof File) {
-          formData.append(key, editingEquipment[key])
+              day: editingEquipment[key].end.day,
+            },
+          };
+          formData.append(key, JSON.stringify(dateRange));
+        } else if (key === "image" && editingEquipment[key] instanceof File) {
+          formData.append(key, editingEquipment[key]);
         } else {
-          formData.append(key, editingEquipment[key])
+          formData.append(key, editingEquipment[key]);
         }
-      })
+      });
 
-      await updateEquipment(editingEquipment._id, formData)
-      await fetchData()
-      setEditingEquipment(null)
-      onEquipmentClose()
-      toast.success('Equipment updated successfully')
+      await updateEquipment(editingEquipment._id, formData);
+      await fetchData();
+      setEditingEquipment(null);
+      onEquipmentClose();
+      toast.success("Equipment updated successfully");
     } catch (error) {
-      console.error('Failed to update equipment:', error)
-      toast.error('Failed to update equipment')
+      console.error("Failed to update equipment:", error);
+      toast.error("Failed to update equipment");
     }
-  }
+  };
+  
 
+
+
+  
   const handleDeleteEquipment = async (equipmentId) => {
     try {
-      await deleteEquipment(equipmentId)
-      await fetchData()
-      toast.success('Equipment deleted successfully')
+      await deleteEquipment(equipmentId);
+      await fetchData();
+      toast.success("Equipment deleted successfully");
     } catch (error) {
-      console.error('Failed to delete equipment:', error)
-      toast.error('Failed to delete equipment')
+      console.error("Failed to delete equipment:", error);
+      toast.error("Failed to delete equipment");
     }
-  }
+  };
 
   const handleEquipmentChange = (e) => {
-    const { name, value, files } = e.target
-    if (name === 'image') {
-      setNewEquipment({ ...newEquipment, [name]: files[0] })
+    const { name, value, files } = e.target;
+    if (name === "image") {
+      setNewEquipment({ ...newEquipment, [name]: files[0] });
     } else {
-      setNewEquipment({ ...newEquipment, [name]: value })
+      setNewEquipment({ ...newEquipment, [name]: value });
     }
-  }
+  };
 
   const getImageUrl = (imagePath) => {
-    if (!imagePath) return '/placeholder.png'
-    if (imagePath.startsWith('http')) return imagePath
-    return `${process.env.NEXT_PUBLIC_API_URL}/uploads/${imagePath}`
-  }
+    if (!imagePath) return "/placeholder.png";
+    if (imagePath.startsWith("http")) return imagePath;
+    return `${process.env.NEXT_PUBLIC_API_URL}/uploads/${imagePath}`;
+  };
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
-
   
-
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="w-10 h-10 animate-spin" />
       </div>
-    )
+    );
   }
+
+ // Define the handleLogout function
+ const handleLogout = () => {
+  // Clear any authentication tokens or session data
+  localStorage.removeItem("authToken"); // Example if using localStorage
+
+  // Redirect the user to the login page or home page
+  router.push("/login");
+
+  // Optionally show a logout success message
+  alert("You have successfully logged out.");
+};
+
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Dashboard</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
+        Dashboard
+      </h1>
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 w-64 h-full bg-green-200 text-green-900 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } transition-transform duration-300 ease-in-out z-50`}
+        className={`fixed top-0 left-0 w-64 h-full bg-green-200 text-green-900 transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 ease-in-out z-50`}
       >
         <ul className="space-y-6 mt-12 p-4">
           <li>
-            <a href="/" className="block py-2 px-4 hover:bg-green-400">
+            <a
+              href="/"
+              className="flex items-center py-2 px-4 hover:bg-green-400"
+            >
+              <AiFillHome className="mr-2" />
               Home
             </a>
           </li>
-          
           <li>
-            <a href="/equipment" className="block py-2 px-4 hover:bg-green-400">
+            <a
+              href="/explore"
+              className="flex items-center py-2 px-4 hover:bg-green-400"
+            >
+              <MdBuild className="mr-2" />
               Equipment
             </a>
           </li>
           <li>
-            <a href="/about" className="block py-2 px-4 hover:bg-green-400">
+            <a
+              href="/about"
+              className="flex items-center py-2 px-4 hover:bg-green-400"
+            >
+              <BsInfoCircleFill className="mr-2" />
               About Us
             </a>
           </li>
           <li>
-            <a href="/contacts" className="block py-2 px-4 hover:bg-green-400">
+            <a
+              href="/contacts"
+              className="flex items-center py-2 px-4 hover:bg-green-400"
+            >
+              <FiPhone className="mr-2" />
               Contacts
             </a>
           </li>
           <li>
-            <a href="/contacts" className="block py-2 px-4 hover:bg-green-400">
+            <button
+              onClick={handleLogout}
+              className="flex items-center w-full text-left py-2 px-4 hover:bg-green-400"
+            >
+              <FiLogOut className="mr-2" />
               Logout
-            </a>
+            </button>
           </li>
         </ul>
       </div>
@@ -298,15 +384,20 @@ const Dashboard = () => {
 
       {/* Main Content Wrapper */}
       <div
-        className={`flex-grow bg-green-100 py-12 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'ml-64' : 'ml-0'
-          }`}
+        className={`flex-grow bg-green-100 py-12 transition-all duration-300 ease-in-out ${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        }`}
       >
-
         {userProfile && (
-          <Card className="mb-8 flex relative shadow-green"> {/* Flex container for the entire card with relative positioning */}
-
-            <div className="absolute left-8 top-1/2 transform -translate-y-1/2 w-44 h-44 border-2 border-green-500 rounded-full flex items-center justify-center p-1"> {/* Outer container for the border */}
-              <div className="rounded-full overflow-hidden w-full h-full"> {/* Inner container for the image */}
+          <Card className="mb-8 flex relative shadow-green">
+            {" "}
+            {/* Flex container for the entire card with relative positioning */}
+            <div className="absolute left-8 top-1/2 transform -translate-y-1/2 w-44 h-44 border-2 border-green-500 rounded-full flex items-center justify-center p-1">
+              {" "}
+              {/* Outer container for the border */}
+              <div className="rounded-full overflow-hidden w-full h-full">
+                {" "}
+                {/* Inner container for the image */}
                 <Image
                   src={userProfile.profileImage || "/avtar.jpg"} // Provide a default image if not available
                   alt="User Profile Image"
@@ -316,23 +407,40 @@ const Dashboard = () => {
                 />
               </div>
             </div>
-
-
-            <CardBody className="flex flex-col justify-between w-full ml-56"> {/* Increased left margin to avoid overlap with the image */}
+            <CardBody className="flex flex-col justify-between w-full ml-56">
+              {" "}
+              {/* Increased left margin to avoid overlap with the image */}
               <div>
                 <h2 className="text-2xl font-semibold mb-4">User Profile</h2>
-                <p className="text-gray-700"><strong>Name:</strong> {userProfile.fullName}</p>
-                <p className="text-gray-700"><strong>Email:</strong> {userProfile.email}</p>
-                <p className="text-gray-700"><strong>Mobile:</strong> {userProfile.contactNumber}</p>
-                <p className="text-gray-700"><strong>Address:</strong> {userProfile.address}</p>
+                <p className="text-gray-700">
+                  <strong>Name:</strong> {userProfile.fullName}
+                </p>
+                <p className="text-gray-700">
+                  <strong>Email:</strong> {userProfile.email}
+                </p>
+                <p className="text-gray-700">
+                  <strong>Mobile:</strong> {userProfile.contactNumber}
+                </p>
+                <p className="text-gray-700">
+                  <strong>Address:</strong> {userProfile.address}
+                </p>
               </div>
-
               {/* New Booking and Add Equipment buttons at the bottom */}
-              <div className="flex mt-4 space-x-4"> {/* Add margin to separate buttons from the content above */}
-                <Button color="primary" startContent={<Calendar />} onPress={onBookingOpen}>
+              <div className="flex mt-4 space-x-4">
+                {" "}
+                {/* Add margin to separate buttons from the content above */}
+                <Button
+                  color="primary"
+                  startContent={<Calendar />}
+                  onPress={onBookingOpen}
+                >
                   New Booking
                 </Button>
-                <Button color="secondary" startContent={<Package />} onPress={onEquipmentOpen}>
+                <Button
+                  color="secondary"
+                  startContent={<Package />}
+                  onPress={onEquipmentOpen}
+                >
                   Add Equipment
                 </Button>
               </div>
@@ -340,13 +448,16 @@ const Dashboard = () => {
           </Card>
         )}
 
-
-
-        <h2 className="text-2xl font-semibold mb-4 text-gray-700">Your Bookings</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-gray-700">
+          Your Bookings
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {bookings.length > 0 ? (
             bookings.map((booking) => (
-              <Card key={booking._id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <Card
+                key={booking._id}
+                className="bg-white rounded-lg shadow-md overflow-hidden"
+              >
                 <CardBody>
                   <Image
                     src={getImageUrl(booking.equipment?.image)}
@@ -355,10 +466,15 @@ const Dashboard = () => {
                     height={200}
                     className="w-full h-48 object-cover rounded-t-lg"
                   />
-                  <h3 className="text-xl font-semibold mt-4 mb-2">{booking.equipmentId.name}</h3>
-                  <p className="text-gray-600 mb-2">{booking.equipmentId.description}</p>
+                  <h3 className="text-xl font-semibold mt-4 mb-2">
+                    {booking.equipmentId.name}
+                  </h3>
+                  <p className="text-gray-600 mb-2">
+                    {booking.equipmentId.description}
+                  </p>
                   <p className="text-gray-800 font-medium">
-                    Rental Date: {new Date(booking.rentalDate).toLocaleDateString()}
+                    Rental Date:{" "}
+                    {new Date(booking.rentalDate).toLocaleDateString()}
                   </p>
                 </CardBody>
                 <CardFooter className="flex justify-between">
@@ -366,10 +482,23 @@ const Dashboard = () => {
                     ${booking.equipmentId.rentalPrice} / day
                   </p>
                   <div>
-                    <Button color="primary" size="sm" startContent={<Edit />} onPress={() => { setEditingBooking(booking); onBookingOpen(); }}>
+                    <Button
+                      color="primary"
+                      size="sm"
+                      startContent={<Edit />}
+                      onPress={() => {
+                        setEditingBooking(booking);
+                        onBookingOpen();
+                      }}
+                    >
                       Edit
                     </Button>
-                    <Button color="danger" size="sm" startContent={<Trash />} onPress={() => handleDeleteBooking(booking._id)}>
+                    <Button
+                      color="danger"
+                      size="sm"
+                      startContent={<Trash />}
+                      onPress={() => handleDeleteBooking(booking._id)}
+                    >
                       Delete
                     </Button>
                   </div>
@@ -377,15 +506,22 @@ const Dashboard = () => {
               </Card>
             ))
           ) : (
-            <p className="col-span-full text-center text-gray-500">No bookings found.</p>
+            <p className="col-span-full text-center text-gray-500">
+              No bookings found.
+            </p>
           )}
         </div>
 
-        <h2 className="text-2xl font-semibold mb-4 text-gray-700">Available Equipment</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-gray-700">
+          Available Equipment
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {equipment.length > 0 ? (
             equipment.map((item) => (
-              <Card key={item._id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <Card
+                key={item._id}
+                className="bg-white rounded-lg shadow-md overflow-hidden"
+              >
                 <CardBody>
                   <Image
                     src={getImageUrl(item.image)}
@@ -394,20 +530,41 @@ const Dashboard = () => {
                     height={200}
                     className="w-full h-48 object-cover rounded-t-lg"
                   />
-                  <h3 className="text-xl font-semibold mt-4 mb-2">{item.name}</h3>
+                  <h3 className="text-xl font-semibold mt-4 mb-2">
+                    {item.name}
+                  </h3>
                   <p className="text-gray-600 mb-2">{item.description}</p>
-                  <p className="text-gray-800 font-medium">Condition: {item.condition}</p>
                   <p className="text-gray-800 font-medium">
-                    Available: {new Date(item.availabilityDateStart).toLocaleDateString()} - {new Date(item.availabilityDateEnd).toLocaleDateString()}
+                    Condition: {item.condition}
+                  </p>
+                  <p className="text-gray-800 font-medium">
+                    Available:{" "}
+                    {new Date(item.availabilityDateStart).toLocaleDateString()}{" "}
+                    - {new Date(item.availabilityDateEnd).toLocaleDateString()}
                   </p>
                 </CardBody>
                 <CardFooter className="flex justify-between">
-                  <p className="text-green-600 font-bold">${item.rentalPrice} / day</p>
+                  <p className="text-green-600 font-bold">
+                    ${item.rentalPrice} / day
+                  </p>
                   <div>
-                    <Button color="primary" size="sm" startContent={<Edit />} onPress={() => { setEditingEquipment(item); onEquipmentOpen(); }}>
+                    <Button
+                      color="primary"
+                      size="sm"
+                      startContent={<Edit />}
+                      onPress={() => {
+                        setEditingEquipment(item);
+                        onEquipmentOpen();
+                      }}
+                    >
                       Edit
                     </Button>
-                    <Button color="danger" size="sm" startContent={<Trash />} onPress={() => handleDeleteEquipment(item._id)}>
+                    <Button
+                      color="danger"
+                      size="sm"
+                      startContent={<Trash />}
+                      onPress={() => handleDeleteEquipment(item._id)}
+                    >
                       Delete
                     </Button>
                   </div>
@@ -415,85 +572,183 @@ const Dashboard = () => {
               </Card>
             ))
           ) : (
-            <p className="col-span-full text-center text-gray-500">No equipment available.</p>
+            <p className="col-span-full text-center text-gray-500">
+              No equipment available.
+            </p>
           )}
         </div>
 
         {/* Modal for creating/editing bookings */}
-        <Modal isOpen={isBookingOpen} onClose={() => { onBookingClose(); setEditingBooking(null); }}>
+        <Modal
+          isOpen={isBookingOpen}
+          onClose={() => {
+            onBookingClose();
+            setEditingBooking(null);
+          }}
+        >
           <ModalContent>
-            <ModalHeader>{editingBooking ? 'Edit Booking' : 'Create New Booking'}</ModalHeader>
+            <ModalHeader>
+              {editingBooking ? "Edit Booking" : "Create New Booking"}
+            </ModalHeader>
             <ModalBody>
               <select
                 className="w-full p-2 border rounded mb-4"
-                value={editingBooking ? editingBooking.equipmentId : newBooking.equipmentId}
-                onChange={(e) => editingBooking ? setEditingBooking({ ...editingBooking, equipmentId: e.target.value }) : setNewBooking({ ...newBooking, equipmentId: e.target.value })}
+                value={
+                  editingBooking
+                    ? editingBooking.equipmentId
+                    : newBooking.equipmentId
+                }
+                onChange={(e) =>
+                  editingBooking
+                    ? setEditingBooking({
+                        ...editingBooking,
+                        equipmentId: e.target.value,
+                      })
+                    : setNewBooking({
+                        ...newBooking,
+                        equipmentId: e.target.value,
+                      })
+                }
               >
                 <option value="">Select Equipment</option>
                 {equipment.map((item) => (
-                  <option key={item._id} value={item._id}>{item.name}</option>
+                  <option key={item._id} value={item._id}>
+                    {item.name}
+                  </option>
                 ))}
               </select>
               <Input
                 type="date"
-                value={editingBooking ? editingBooking.rentalDate.split('T')[0] : newBooking.rentalDate}
-                onChange={(e) => editingBooking ? setEditingBooking({ ...editingBooking, rentalDate: e.target.value }) : setNewBooking({ ...newBooking, rentalDate: e.target.value })}
+                value={
+                  editingBooking
+                    ? editingBooking.rentalDate.split("T")[0]
+                    : newBooking.rentalDate
+                }
+                onChange={(e) =>
+                  editingBooking
+                    ? setEditingBooking({
+                        ...editingBooking,
+                        rentalDate: e.target.value,
+                      })
+                    : setNewBooking({
+                        ...newBooking,
+                        rentalDate: e.target.value,
+                      })
+                }
                 placeholder="Rental Date"
               />
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onPress={editingBooking ? handleUpdateBooking : handleCreateBooking}>
-                {editingBooking ? 'Update Booking' : 'Create Booking'}
+              <Button
+                color="primary"
+                onPress={
+                  editingBooking ? handleUpdateBooking : handleCreateBooking
+                }
+              >
+                {editingBooking ? "Update Booking" : "Create Booking"}
               </Button>
-              <Button color="danger" variant="light" onPress={() => { onBookingClose(); setEditingBooking(null); }}>Cancel</Button>
+              <Button
+                color="danger"
+                variant="light"
+                onPress={() => {
+                  onBookingClose();
+                  setEditingBooking(null);
+                }}
+              >
+                Cancel
+              </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
-        <Modal isOpen={isEquipmentOpen} onClose={() => { onEquipmentClose(); setEditingEquipment(null); }} size="3xl">
+        <Modal
+          isOpen={isEquipmentOpen}
+          onClose={() => {
+            onEquipmentClose();
+            setEditingEquipment(null);
+          }}
+          size="3xl"
+        >
           <ModalContent>
-            <ModalHeader>{editingEquipment ? 'Edit Equipment' : 'Add New Equipment'}</ModalHeader>
+            <ModalHeader>
+              {editingEquipment ? "Edit Equipment" : "Add New Equipment"}
+            </ModalHeader>
             <ModalBody>
-              <form onSubmit={editingEquipment ? handleUpdateEquipment : handleAddEquipment} className="space-y-4">
+              <form
+                onSubmit={
+                  editingEquipment ? handleUpdateEquipment : handleAddEquipment
+                }
+                className="space-y-4"
+              >
                 <div className="flex justify-between space-x-4">
                   <div className="form-row flex-1">
-                    <label className="text-sm font-medium mb-2">Equipment Name</label>
+                    <label className="text-sm font-medium mb-2">
+                      Equipment Name
+                    </label>
                     <Dropdown>
                       <DropdownTrigger>
-                        <Button variant="bordered" className="capitalize w-full">
+                        <Button
+                          variant="bordered"
+                          className="capitalize w-full"
+                        >
                           {newEquipment.name || "Select Equipment"}
                         </Button>
                       </DropdownTrigger>
                       <DropdownMenu
                         aria-label="Equipment name"
                         selectionMode="single"
-                        onAction={(key) => setNewEquipment({ ...newEquipment, name: key })}
+                        onAction={(key) =>
+                          setNewEquipment({ ...newEquipment, name: key })
+                        }
                       >
-                        <DropdownItem key="Tractor">Tractor (ट्रॅक्टर)</DropdownItem>
-                        <DropdownItem key="Harvester">Harvester (हार्वेस्टर)</DropdownItem>
+                        <DropdownItem key="Tractor">
+                          Tractor (ट्रॅक्टर)
+                        </DropdownItem>
+                        <DropdownItem key="Harvester">
+                          Harvester (हार्वेस्टर)
+                        </DropdownItem>
                         <DropdownItem key="Khurp">Khurp (खुरपी)</DropdownItem>
                         <DropdownItem key="Plow">Plow (हलकुंठ)</DropdownItem>
-                        <DropdownItem key="Seed Drill">Seed Drill (बीज ड्रिल)</DropdownItem>
-                        <DropdownItem key="Cultivator">Cultivator (कुल्टीव्हेटर)</DropdownItem>
-                        <DropdownItem key="Sprayer">Sprayer (स्प्रेयर)</DropdownItem>
-                        <DropdownItem key="Rotavator">Rotavator (रोटाव्हेटर)</DropdownItem>
-                        <DropdownItem key="Harvesting Machine">Harvesting Machine (हार्वेस्टिंग मशीन)</DropdownItem>
-                        <DropdownItem key="Fertilizer Spreader">Fertilizer Spreader (खते पसरवणारा)</DropdownItem>
+                        <DropdownItem key="Seed Drill">
+                          Seed Drill (बीज ड्रिल)
+                        </DropdownItem>
+                        <DropdownItem key="Cultivator">
+                          Cultivator (कुल्टीव्हेटर)
+                        </DropdownItem>
+                        <DropdownItem key="Sprayer">
+                          Sprayer (स्प्रेयर)
+                        </DropdownItem>
+                        <DropdownItem key="Rotavator">
+                          Rotavator (रोटाव्हेटर)
+                        </DropdownItem>
+                        <DropdownItem key="Harvesting Machine">
+                          Harvesting Machine (हार्वेस्टिंग मशीन)
+                        </DropdownItem>
+                        <DropdownItem key="Fertilizer Spreader">
+                          Fertilizer Spreader (खते पसरवणारा)
+                        </DropdownItem>
                       </DropdownMenu>
                     </Dropdown>
                   </div>
 
                   <div className="form-row flex-1">
-                    <label className="text-sm font-medium mb-2">Condition</label>
+                    <label className="text-sm font-medium mb-2">
+                      Condition
+                    </label>
                     <Dropdown>
                       <DropdownTrigger>
-                        <Button variant="bordered" className="capitalize w-full">
+                        <Button
+                          variant="bordered"
+                          className="capitalize w-full"
+                        >
                           {newEquipment.condition || "Select Condition"}
                         </Button>
                       </DropdownTrigger>
                       <DropdownMenu
                         aria-label="Equipment Condition"
                         selectionMode="single"
-                        onAction={(key) => setNewEquipment({ ...newEquipment, condition: key })}
+                        onAction={(key) =>
+                          setNewEquipment({ ...newEquipment, condition: key })
+                        }
                       >
                         <DropdownItem key="Good">Good</DropdownItem>
                         <DropdownItem key="Better">Better</DropdownItem>
@@ -505,7 +760,9 @@ const Dashboard = () => {
 
                 <div className="flex justify-between space-x-4">
                   <div className="form-row flex-1">
-                    <label className="text-sm font-medium mb-2">Rental Price</label>
+                    <label className="text-sm font-medium mb-2">
+                      Rental Price
+                    </label>
                     <Input
                       name="rentalPrice"
                       value={newEquipment.rentalPrice}
@@ -517,21 +774,30 @@ const Dashboard = () => {
                   </div>
 
                   <div className="form-row flex-1">
-                    <label className="text-sm font-medium mb-2">Availability Date</label>
+                    <label className="text-sm font-medium mb-2">
+                      Availability Date
+                    </label>
                     <DateRangePicker
                       isRequired
                       defaultValue={{
                         start: parseDate("2024-04-01"),
                         end: parseDate("2024-04-08"),
                       }}
-                      onChange={(range) => setNewEquipment({ ...newEquipment, availabilityDate: range })}
+                      onChange={(range) =>
+                        setNewEquipment({
+                          ...newEquipment,
+                          availabilityDate: range,
+                        })
+                      }
                     />
                   </div>
                 </div>
 
                 <div className="flex justify-between space-x-4">
                   <div className="form-row flex-1">
-                    <label className="text-sm font-medium mb-2">Owner Name</label>
+                    <label className="text-sm font-medium mb-2">
+                      Owner Name
+                    </label>
                     <Input
                       name="ownerName"
                       value={newEquipment.ownerName}
@@ -555,7 +821,9 @@ const Dashboard = () => {
 
                 <div className="flex justify-between space-x-4">
                   <div className="form-row flex-1">
-                    <label className="text-sm font-medium mb-2">Contact Number</label>
+                    <label className="text-sm font-medium mb-2">
+                      Contact Number
+                    </label>
                     <Input
                       name="contactNumber"
                       value={newEquipment.contactNumber}
@@ -578,7 +846,9 @@ const Dashboard = () => {
                 </div>
 
                 <div className="form-row flex flex-col mb-4">
-                  <label className="text-sm font-medium mb-2">Description</label>
+                  <label className="text-sm font-medium mb-2">
+                    Description
+                  </label>
                   <Textarea
                     name="description"
                     value={newEquipment.description}
@@ -590,21 +860,27 @@ const Dashboard = () => {
                 </div>
 
                 <div className="flex justify-end space-x-2">
-                  <Button color="danger" variant="light" onPress={() => { onEquipmentClose(); setEditingEquipment(null); }}>Cancel</Button>
-                  <Button color="primary" type="submit">
-                    {editingEquipment ? 'Update Equipment' : 'Add Equipment'}
+                  <Button
+                    color="danger"
+                    variant="light"
+                    onPress={() => {
+                      onEquipmentClose();
+                      setEditingEquipment(null);
+                    }}
+                  >
+                    Cancel
                   </Button>
-
+                  <Button color="primary" type="submit">
+                    {editingEquipment ? "Update Equipment" : "Add Equipment"}
+                  </Button>
                 </div>
               </form>
             </ModalBody>
           </ModalContent>
         </Modal>
       </div>
-
     </div>
-  )
-
-}
+  );
+};
 
 export default withAuth(Dashboard);
